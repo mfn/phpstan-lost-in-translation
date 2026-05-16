@@ -61,13 +61,12 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                include:
-                    - php-version: "8.2"
-                      laravel-version: "12"
-                    - php-version: "8.3"
-                      laravel-version: "12"
-                    - php-version: "8.4"
-                      laravel-version: "12"
+                php-version:
+                    - "8.2"
+                    - "8.3"
+                    - "8.4"
+                laravel-version:
+                    - "12"
         steps:
             - uses: actions/checkout@v4
 
