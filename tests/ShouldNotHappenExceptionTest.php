@@ -15,39 +15,40 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests;
 
+use Exception;
 use Mfn\PHPStanLostInTranslation\CallRule\CallRuleCollection;
 use Mfn\PHPStanLostInTranslation\LostInTranslationHelper;
 use Mfn\PHPStanLostInTranslation\Rule\LostInTranslationRule;
 use Mfn\PHPStanLostInTranslation\ShouldNotHappenException;
 use PhpParser\Node\Expr\FuncCall;
 use PHPStan\Analyser\Scope;
+use RuntimeException;
 
 final class ShouldNotHappenExceptionTest extends \PHPUnit\Framework\TestCase
 {
     public function testRethrow(): void
     {
-        $exception = new \Exception('msg');
+        $exception = new Exception('msg');
         $this->expectExceptionMessage('msg');
         $this->expectException(ShouldNotHappenException::class);
-        SHouldNotHappenException::rethrow($exception);
+        ShouldNotHappenException::rethrow($exception);
     }
 
     public function testExceptionConversion(): void
     {
         if (!class_exists(FuncCall::class)) {
-            $this->markTestIncomplete('This seems to fail when you filter, probably PHPStan autoload does not get initialized');
+            self::markTestIncomplete('This seems to fail when you filter, probably PHPStan autoload does not get initialized');
         }
 
-        $ex = new \RuntimeException(self::class);
-        $mock = $this->createStub(LostInTranslationHelper::class);
+        $ex = new RuntimeException(self::class);
+        $mock = self::createStub(LostInTranslationHelper::class);
         $mock->method('parseCallLike')
             ->willThrowException($ex);
 
-        $node = $this->createStub(FuncCall::class);
+        $node = self::createStub(FuncCall::class);
 
         $obj = new LostInTranslationRule($mock, CallRuleCollection::createFromArray([]));
 
@@ -57,7 +58,7 @@ final class ShouldNotHappenExceptionTest extends \PHPUnit\Framework\TestCase
         $obj->processNode(
             $node,
             // @phpstan-ignore-next-line argument.type
-            $this->createStub(Scope::class),
+            self::createStub(Scope::class),
         );
     }
 }

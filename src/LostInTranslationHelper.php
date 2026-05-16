@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation;
 
+use Lang;
 use Mfn\PHPStanLostInTranslation\TranslationLoader\TranslationLoader;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
@@ -46,7 +46,7 @@ class LostInTranslationHelper
         private readonly TranslationLoader $translationLoader,
     ) {
         $this->translatorType = new ObjectType(\Illuminate\Contracts\Translation\Translator::class);
-        $this->cache = new \WeakMap();
+        $this->cache = new WeakMap;
 
         if (!isset(self::$nullMarker)) {
             self::$nullMarker = new class {
@@ -56,21 +56,23 @@ class LostInTranslationHelper
 
     public function parseCallLike(Node $node, Scope $scope): ?TranslationCall
     {
-        /** @var ?\WeakMap<Node, TranslationCall|object> $scopeCache */
+        /** @var ?WeakMap<Node, TranslationCall|object> $scopeCache */
         $scopeCache = $this->cache[$scope] ?? null;
+
         if (null === $scopeCache) {
-            $scopeCache = new \WeakMap();
+            $scopeCache = new WeakMap;
             /** @phpstan-ignore-next-line offsetAssign.valueType */
             $this->cache[$scope] = $scopeCache;
         } else {
             $call = $scopeCache[$node] ?? null;
+
             if (null !== $call) {
                 if ($call === self::$nullMarker) {
                     return null;
-                } else {
-                    assert($call instanceof TranslationCall);
-                    return $call;
                 }
+                \assert($call instanceof TranslationCall);
+
+                return $call;
             }
         }
 
@@ -97,9 +99,9 @@ class LostInTranslationHelper
             $className = $varType->getObjectClassNames()[0] ?? null; // meh
             $name = $node->name->toLowerString();
 
-            if ($name === 'choice') {
+            if ('choice' === $name) {
                 $isChoice = true;
-            } elseif ($name === 'get') {
+            } elseif ('get' === $name) {
                 $isChoice = false;
             } else {
                 return null;
@@ -114,15 +116,15 @@ class LostInTranslationHelper
             $className = $node->class->toString();
 
             /** @phpstan-ignore-next-line class.notFound */
-            if ($className !== \Illuminate\Support\Facades\Lang::class && $className !== \Lang::class) {
+            if (\Illuminate\Support\Facades\Lang::class !== $className && Lang::class !== $className) {
                 return null;
             }
 
             $name = $node->name->toLowerString();
 
-            if ($name === 'choice') {
+            if ('choice' === $name) {
                 $isChoice = true;
-            } elseif ($name === 'get') {
+            } elseif ('get' === $name) {
                 $isChoice = false;
             } else {
                 return null;
@@ -137,9 +139,9 @@ class LostInTranslationHelper
             $className = null;
             $name = $node->name->toLowerString();
 
-            if ($name === '__' || $name === 'trans') {
+            if ('__' === $name || 'trans' === $name) {
                 $isChoice = false;
-            } elseif ($name === 'trans_choice') {
+            } elseif ('trans_choice' === $name) {
                 $isChoice = true;
             } else {
                 return null;
@@ -153,22 +155,28 @@ class LostInTranslationHelper
         $key = $number = $locale = $replace = null;
 
         if ($isChoice) {
-            switch (count($args)) {
+            switch (\count($args)) {
                 case 4:
                     if ($args[3] instanceof Node\Arg) {
                         $locale = $args[3]->value;
                     }
+
                     // fallthrough
+                    // no break
                 case 3:
                     if ($args[2] instanceof Node\Arg) {
                         $replace = $args[2]->value;
                     }
+
                     // fallthrough
+                    // no break
                 case 2:
                     if ($args[1] instanceof Node\Arg) {
                         $number = $args[1]->value;
                     }
+
                     // fallthrough
+                    // no break
                 case 1:
                     if ($args[0] instanceof Node\Arg) {
                         $key = $args[0]->value;
@@ -176,17 +184,21 @@ class LostInTranslationHelper
                     // fallthrough
             }
         } else {
-            switch (count($args)) {
+            switch (\count($args)) {
                 case 3:
                     if ($args[2] instanceof Node\Arg) {
                         $locale = $args[2]->value;
                     }
+
                     // fallthrough
+                    // no break
                 case 2:
                     if ($args[1] instanceof Node\Arg) {
                         $replace = $args[1]->value;
                     }
+
                     // fallthrough
+                    // no break
                 case 1:
                     if ($args[0] instanceof Node\Arg) {
                         $key = $args[0]->value;
@@ -195,15 +207,15 @@ class LostInTranslationHelper
             }
         }
 
-        if ($key === null) {
+        if (null === $key) {
             return null;
         }
 
         $keyType = $scope->getType($key);
-        $localeType = $locale !== null ? $scope->getType($locale) : null;
+        $localeType = null !== $locale ? $scope->getType($locale) : null;
         $file = $scope->getFile(); // @TODO this might be getting the compiled blade path...
 
-        assert(strlen($file) > 0);
+        \assert(\strlen($file) > 0);
 
         return new TranslationCall(
             className: $className,
@@ -212,9 +224,9 @@ class LostInTranslationHelper
             line: $node->getStartLine(),
             possibleTranslations: $this->gatherPossibleTranslations($keyType, $localeType),
             keyType: $keyType,
-            replaceType: $replace !== null ? $scope->getType($replace) : null,
+            replaceType: null !== $replace ? $scope->getType($replace) : null,
             localeType: $localeType,
-            numberType: $number !== null ? $scope->getType($number) : null,
+            numberType: null !== $number ? $scope->getType($number) : null,
             isChoice: $isChoice,
         );
     }
@@ -224,7 +236,7 @@ class LostInTranslationHelper
      */
     private function gatherPossibleTranslations(Type $keyType, ?Type $localeType = null): array
     {
-        if (null !== $localeType && count($localeType->getConstantStrings()) > 0) {
+        if (null !== $localeType && \count($localeType->getConstantStrings()) > 0) {
             $lookInLocales = [];
 
             foreach ($localeType->getConstantStrings() as $localeTypeConstantString) {

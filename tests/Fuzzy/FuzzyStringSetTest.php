@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests\Fuzzy;
 
 use Mfn\PHPStanLostInTranslation\Fuzzy\NullFuzzyStringSet;
@@ -38,7 +37,7 @@ final class FuzzyStringSetTest extends TestCase
         self::expectNotToPerformAssertions();
 
         /** @var AbstractFuzzyStringSetBenchmark $benchmark */
-        $benchmark = new $className();
+        $benchmark = new $className;
 
         $benchmark->setupDataSet1();
         $benchmark->benchDataSet1();
@@ -53,11 +52,11 @@ final class FuzzyStringSetTest extends TestCase
         self::expectNotToPerformAssertions();
 
         /** @var AbstractFuzzyStringSetBenchmark $benchmark */
-        $benchmark = new $className();
+        $benchmark = new $className;
 
         $benchmark->setupDataSet1Memoized();
 
-        for ($i = 0; $i < 10; ++$i) {
+        for ($i = 0; $i < 10; $i++) {
             $benchmark->benchDataSet1Memoized();
         }
     }
@@ -71,7 +70,7 @@ final class FuzzyStringSetTest extends TestCase
         self::expectNotToPerformAssertions();
 
         /** @var AbstractFuzzyStringSetBenchmark $benchmark */
-        $benchmark = new $className();
+        $benchmark = new $className;
 
         $benchmark->setupDataSet2();
         $benchmark->benchDataSet2();
@@ -79,11 +78,11 @@ final class FuzzyStringSetTest extends TestCase
 
     public function testNullFuzzyStringSet(): void
     {
-        $set = new NullFuzzyStringSet();
+        $set = new NullFuzzyStringSet;
         $set->addMany(AbstractFuzzyStringSetBenchmark::DATA_SET_1);
         $set->add(AbstractFuzzyStringSetBenchmark::DATA_SET_1[0]);
 
-        $this->assertNull($set->search('tezt'));
+        self::assertNull($set->search('tezt'));
     }
 
     /**

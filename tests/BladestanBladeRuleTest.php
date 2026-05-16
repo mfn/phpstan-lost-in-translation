@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests;
 
 use Bladestan\Rules\BladeRule;
@@ -29,7 +28,7 @@ use PHPStan\Rules\Rule;
  */
 class BladestanBladeRuleTest extends RuleTestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         if (!\Composer\InstalledVersions::isInstalled('tomasvotruba/bladestan')) {
             self::markTestSkipped('This test requires Bladestan');
@@ -41,7 +40,7 @@ class BladestanBladeRuleTest extends RuleTestCase
     /**
      * @see https://github.com/laravel/framework/issues/49502#issuecomment-2222592953
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -94,8 +93,8 @@ class BladestanBladeRuleTest extends RuleTestCase
 
     public static function getAdditionalConfigFiles(): array
     {
-         return array_merge(parent::getAdditionalConfigFiles(), [
-             __DIR__ . '/blade.neon',
-         ]);
+        return array_merge(parent::getAdditionalConfigFiles(), [
+            __DIR__ . '/blade.neon',
+        ]);
     }
 }

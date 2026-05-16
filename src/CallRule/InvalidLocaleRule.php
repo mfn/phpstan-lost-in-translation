@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\CallRule;
 
 use Mfn\PHPStanLostInTranslation\TranslationCall;
@@ -48,7 +47,7 @@ final class InvalidLocaleRule implements CallRuleInterface
             $locale = $localeConstantString->getValue();
 
             if (!$this->loader->hasLocale($locale)) {
-                $errors[] = RuleErrorBuilder::message(sprintf(
+                $errors[] = RuleErrorBuilder::message(\sprintf(
                     'Locale has no available translation strings: %s',
                     $locale,
                 ))
@@ -60,7 +59,7 @@ final class InvalidLocaleRule implements CallRuleInterface
             }
 
             if (!Utils::checkLocaleExists($locale, $this->strictLocales)) {
-                $errors[] = RuleErrorBuilder::message(sprintf(
+                $errors[] = RuleErrorBuilder::message(\sprintf(
                     'Unknown locale: %s',
                     $locale,
                 ))

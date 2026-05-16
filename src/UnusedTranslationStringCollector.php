@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Collectors\Collector;
+use Throwable;
 
 /**
  * @implements Collector<Node\Expr\CallLike, list<UsedTranslationRecord|array<string,string>>>
@@ -54,33 +54,34 @@ final class UnusedTranslationStringCollector implements Collector
                 $this->push($call);
             }
 
-            if (count($this->queued) <= 0) {
+            if (\count($this->queued) <= 0) {
                 return null;
             }
 
             $queued = $this->queued;
             $this->queued = [];
+
             return $queued;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ShouldNotHappenException::rethrow($e);
         }
     }
 
     public function push(TranslationCall $call): void
     {
-        if (count($call->keyType->getConstantStrings()) <= 0) {
+        if (\count($call->keyType->getConstantStrings()) <= 0) {
             return;
         }
 
         $possibleLocales = [];
 
-        if ($call->localeType !== null) {
+        if (null !== $call->localeType) {
             foreach ($call->localeType->getConstantStrings() as $localeConstantString) {
                 $possibleLocales[] = $localeConstantString->getValue();
             }
         }
 
-        if (count($possibleLocales) <= 0) {
+        if (\count($possibleLocales) <= 0) {
             $possibleLocales = ['*'];
         }
 

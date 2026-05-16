@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\TranslationLoader;
 
 use PhpParser\Node;
@@ -54,16 +53,19 @@ final class KeyLineNumberVisitor extends NodeVisitorAbstract
     public function leaveNode(Node $node)
     {
         if ($node instanceof Node\Expr\ArrayItem) {
-            $path = join('.', array_map(static function (Scalar\LNumber|Scalar\String_|string $stackItem): string {
+            $path = implode('.', array_map(static function (Scalar\LNumber|Scalar\String_|string $stackItem): string {
                 if ($stackItem instanceof Scalar\LNumber) {
-                    return sprintf("%d", $stackItem->value); // #yolo
-                } elseif ($stackItem instanceof Scalar\String_) {
-                    return $stackItem->value;
-                } else {
-                    return $stackItem;
+                    return \sprintf('%d', $stackItem->value); // #yolo
                 }
+
+                if ($stackItem instanceof Scalar\String_) {
+                    return $stackItem->value;
+                }
+
+                return $stackItem;
             }, $this->stack));
-            if (strlen($path) > 0) {
+
+            if (\strlen($path) > 0) {
                 $this->lineNumbers[$path] = $node->getStartLine();
             }
             array_pop($this->stack);

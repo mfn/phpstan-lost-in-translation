@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation;
 
 use Mfn\PHPStanLostInTranslation\TranslationLoader\TranslationLoader;
@@ -26,6 +25,7 @@ use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use Throwable;
 
 /**
  * @implements Rule<CollectedDataNode>
@@ -57,7 +57,7 @@ final class UnusedTranslationStringRule implements Rule
             foreach ($data as $fileResults) {
                 foreach ($fileResults as $results) {
                     foreach ($results as $result) {
-                        if (is_array($result)) {
+                        if (\is_array($result)) {
                             $result = UsedTranslationRecord::fromJsonArray($result);
                         }
                         $used[] = $result;
@@ -68,24 +68,24 @@ final class UnusedTranslationStringRule implements Rule
             $possiblyUnused = $this->loader->diffUsed($used);
 
             foreach ($possiblyUnused as $item) {
-                $builder =  RuleErrorBuilder::message(sprintf(
+                $builder = RuleErrorBuilder::message(\sprintf(
                     'Possibly unused translation string %s for locale: %s',
                     Utils::e($item['key']),
-                    join(', ', [$item['locale']]),
+                    implode(', ', [$item['locale']]),
                 ))
                     ->identifier('lostInTranslation.possiblyUnusedTranslationString')
                     ->file($item['file'])
                     ->line($item['line']);
 
                 if (null !== $item['candidate'] && '' !== $item['candidate']) {
-                    $builder->addTip(sprintf('Did you mean %s?', Utils::e($item['candidate'])));
+                    $builder->addTip(\sprintf('Did you mean %s?', Utils::e($item['candidate'])));
                 }
 
                 $errors[] = $builder->build();
             }
 
             return $errors;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ShouldNotHappenException::rethrow($e);
         }
     }

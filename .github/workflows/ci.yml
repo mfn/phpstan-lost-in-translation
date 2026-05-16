@@ -49,11 +49,32 @@ jobs:
             - name: Install dependencies
               run: composer update --prefer-dist --no-progress --no-interaction
 
-            - name: phpcs
-              run: php vendor/bin/phpcs
-
             - name: phpstan
               run: php vendor/bin/phpstan analyze
+
+    code-style:
+        runs-on: ubuntu-latest
+        name: "Code style"
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  coverage: "none"
+                  php-version: "8.4"
+                  tools: composer:v2
+
+            - name: Cache cs-fixer
+              uses: actions/cache@v4
+              with:
+                  path: tools/cs-fixer/vendor
+                  key: ${{ runner.os }}-cs-fixer-${{ hashFiles('tools/cs-fixer/composer.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-cs-fixer-
+
+            - name: cs-lint
+              run: composer cs-lint
 
     test:
         runs-on: ubuntu-latest

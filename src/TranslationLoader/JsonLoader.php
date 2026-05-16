@@ -15,13 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\TranslationLoader;
 
+use JsonException;
 use JsonStreamingParser\Parser;
 use PHPStan\Rules\RuleErrorBuilder;
 use Symfony\Component\Finder\SplFileInfo;
+use Throwable;
 
 final class JsonLoader
 {
@@ -32,28 +33,31 @@ final class JsonLoader
         $errors = [];
 
         $buffer = $file->getContents();
+
         try {
             $raw = json_decode($buffer, true, flags: JSON_THROW_ON_ERROR);
-        } catch (\JsonException $e) {
-            $errors[] = RuleErrorBuilder::message(sprintf('Failed to parse JSON: %s', $e->getMessage()))
+        } catch (JsonException $e) {
+            $errors[] = RuleErrorBuilder::message(\sprintf('Failed to parse JSON: %s', $e->getMessage()))
                 ->identifier(self::IDENTIFIER)
                 ->file($file->getPathname())
                 ->build();
+
             return new LoadResult([], [], $errors);
         }
 
-        if (!is_array($raw)) {
-            $errors[] = RuleErrorBuilder::message(sprintf('Invalid data type: "%s"', gettype($raw)))
+        if (!\is_array($raw)) {
+            $errors[] = RuleErrorBuilder::message(\sprintf('Invalid data type: "%s"', \gettype($raw)))
                 ->identifier(self::IDENTIFIER)
                 ->file($file->getPathname())
                 ->build();
+
             return new LoadResult([], [], $errors);
         }
 
         try {
             $lineNumbers = $this->buildLineNumberMap($file);
-        } catch (\Throwable $e) {
-            $errors[] = RuleErrorBuilder::message(sprintf('Failed to get line numbers for JSON file: %s', $e->getMessage()))
+        } catch (Throwable $e) {
+            $errors[] = RuleErrorBuilder::message(\sprintf('Failed to get line numbers for JSON file: %s', $e->getMessage()))
                 ->identifier(self::IDENTIFIER)
                 ->file($file->getPathname())
                 ->build();
@@ -65,26 +69,28 @@ final class JsonLoader
         foreach ($raw as $k => $v) {
             $line = $lineNumbers[$k] ?? $lineNumbers["int\0" . $k] ?? -1;
 
-            if (!is_string($k)) {
-                $errors[] = RuleErrorBuilder::message(sprintf("Invalid key: %d", $k))
+            if (!\is_string($k)) {
+                $errors[] = RuleErrorBuilder::message(\sprintf('Invalid key: %d', $k))
                     ->identifier(self::IDENTIFIER)
                     ->file($file->getPathname())
                     ->line($line)
                     ->build();
+
                 continue;
             }
 
-            if (!is_string($v)) {
-                $errors[] = RuleErrorBuilder::message(sprintf("Invalid value: %s", json_encode($v, JSON_THROW_ON_ERROR)))
+            if (!\is_string($v)) {
+                $errors[] = RuleErrorBuilder::message(\sprintf('Invalid value: %s', json_encode($v, JSON_THROW_ON_ERROR)))
                     ->identifier(self::IDENTIFIER)
                     ->file($file->getPathname())
                     ->line($line)
                     ->build();
+
                 continue;
             }
 
             // discard empty keys and values
-            if (strlen($k) <= 0 || strlen($v) <= 0) {
+            if (\strlen($k) <= 0 || \strlen($v) <= 0) {
                 continue;
             }
 
@@ -99,14 +105,16 @@ final class JsonLoader
      */
     private function buildLineNumberMap(SplFileInfo $file): array
     {
-        $fh = fopen($file->getPathname(), 'r');
+        $fh = fopen($file->getPathname(), 'rb');
+
         if (false === $fh) {
             return [];
         }
 
-        $listener = new StreamingJsonListener();
+        $listener = new StreamingJsonListener;
         $parser = new Parser($fh, $listener);
         $parser->parse();
+
         return $listener->getLocations();
     }
 }

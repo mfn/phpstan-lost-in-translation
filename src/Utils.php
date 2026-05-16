@@ -15,11 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation;
 
 use Illuminate\Foundation\Application;
+use JsonException;
+use ReflectionProperty;
+use RuntimeException;
 use Symfony\Component\Intl\Locales;
 
 /**
@@ -64,9 +66,10 @@ final class Utils
         if (!$strict) {
             // Allow specifying it with a dash instead of an underscore and with incorrect cases >.>
             $locale = str_replace('-', '_', $locale);
+
             if (str_contains($locale, '_')) {
                 $parts = explode('_', $locale, 2);
-                assert(count($parts) >= 2);
+                \assert(\count($parts) >= 2);
                 $locale = strtolower($parts[0]) . '_' . strtoupper($parts[1]);
             } else {
                 $locale = strtolower($locale);
@@ -87,7 +90,7 @@ final class Utils
         }
 
         // I don't want to initialize the application if it's not already initialized...
-        $r = new \ReflectionProperty($applicationClass, 'instance');
+        $r = new ReflectionProperty($applicationClass, 'instance');
         $app = $r->getValue(null);
 
         if (!($app instanceof Application) || !$app->isBooted()) {
@@ -108,7 +111,7 @@ final class Utils
         }
 
         // I don't want to initialize the application if it's not already initialized...
-        $r = new \ReflectionProperty($applicationClass, 'instance');
+        $r = new ReflectionProperty($applicationClass, 'instance');
         $app = $r->getValue(null);
 
         if (!($app instanceof Application) || !$app->isBooted()) {
@@ -122,12 +125,12 @@ final class Utils
     {
         try {
             return json_encode($value, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $exception) {
+        } catch (JsonException $exception) {
             if (str_contains($exception->getMessage(), 'Malformed UTF-8 characters')) {
                 return '"' . self::escapeBinary($value) . '"';
             }
 
-            throw new \RuntimeException('JsonException: ' . $exception->getMessage(), $exception->getCode(), $exception);
+            throw new RuntimeException('JsonException: ' . $exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
@@ -135,15 +138,15 @@ final class Utils
     {
         $buf = '';
 
-        for ($i = 0; $i < strlen($value); $i++) {
+        for ($i = 0; $i < \strlen($value); $i++) {
             $c = $value[$i];
 
-            if ($c === '"') {
+            if ('"' === $c) {
                 $buf .= '\"';
-            } elseif (ord($c) >= 0x20 && ord($c) < 0x7f) {
+            } elseif (\ord($c) >= 0x20 && \ord($c) < 0x7f) {
                 $buf .= $c;
             } else {
-                $buf .= sprintf("\x%02x", ord($c));
+                $buf .= \sprintf('\\x%02x', \ord($c));
             }
         }
 
@@ -153,9 +156,9 @@ final class Utils
     public static function formatTipForKeyValue(string $locale, string $key, ?string $value = null): string
     {
         if (null === $value || $key === $value) {
-            return sprintf("Locale: %s, Key: %s", self::e($locale), self::e($key));
-        } else {
-            return sprintf("Locale: %s, Key: %s, Value: %s", self::e($locale), self::e($key), self::e($value));
+            return \sprintf('Locale: %s, Key: %s', self::e($locale), self::e($key));
         }
+
+        return \sprintf('Locale: %s, Key: %s, Value: %s', self::e($locale), self::e($key), self::e($value));
     }
 }

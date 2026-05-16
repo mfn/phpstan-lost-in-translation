@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Fuzzy;
 
 /**
@@ -24,12 +23,9 @@ namespace Mfn\PHPStanLostInTranslation\Fuzzy;
  */
 final class MyFuzzyStringSet implements FuzzyStringSetInterface
 {
-    // phpcs:ignore
-    private const EMPTY_ARRAY = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+    private const EMPTY_ARRAY = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-    /**
-     * @var array<int, array<int, int>>
-     */
+    /** @var array<int, array<int, int>> */
     private array $index = [];
 
     /** @var array<int, non-empty-string> */
@@ -45,7 +41,7 @@ final class MyFuzzyStringSet implements FuzzyStringSetInterface
     {
         $this->index = array_fill(0, 256, []);
 
-        if ($strings !== null) {
+        if (null !== $strings) {
             $this->addMany($strings);
         }
     }
@@ -65,7 +61,7 @@ final class MyFuzzyStringSet implements FuzzyStringSetInterface
                 continue;
             }
 
-            $index = count($this->strings);
+            $index = \count($this->strings);
 
             $this->strings[] = $string;
             $this->stringToIndex[$string] = $index;
@@ -83,7 +79,7 @@ final class MyFuzzyStringSet implements FuzzyStringSetInterface
     public function search(string $string): ?string
     {
         $vector = self::vec($string);
-        $length = strlen($string);
+        $length = \strlen($string);
         $threshold = $length;
 
         $otherIndexDeltas = [];
@@ -92,7 +88,7 @@ final class MyFuzzyStringSet implements FuzzyStringSetInterface
             foreach ($this->index[$byte] as $otherStringIndex => $otherCount) {
                 $currentDelta = $otherIndexDeltas[$otherStringIndex] ?? 0;
 
-                if ($currentDelta === false) {
+                if (false === $currentDelta) {
                     continue;
                 }
 
@@ -107,10 +103,11 @@ final class MyFuzzyStringSet implements FuzzyStringSetInterface
         }
 
         // convert to levenshtein and filter
-        for ($i = 0; $i < count($this->strings); $i++) {
+        for ($i = 0; $i < \count($this->strings); $i++) {
             if (isset($otherIndexDeltas[$i])) {
-                if ($otherIndexDeltas[$i] === false) {
+                if (false === $otherIndexDeltas[$i]) {
                     unset($otherIndexDeltas[$i]);
+
                     continue;
                 }
 
@@ -118,6 +115,7 @@ final class MyFuzzyStringSet implements FuzzyStringSetInterface
 
                 if ($delta > $threshold) {
                     unset($otherIndexDeltas[$i]);
+
                     continue;
                 }
 
@@ -129,18 +127,18 @@ final class MyFuzzyStringSet implements FuzzyStringSetInterface
 
         $firstKey = array_key_first($otherIndexDeltas);
 
-        if ($firstKey === null) {
+        if (null === $firstKey) {
             return null;
         }
 
         $smallestDelta = $otherIndexDeltas[$firstKey];
         $result = $this->strings[$firstKey] ?? null;
 
-        if ($result === null || $smallestDelta === false) {
+        if (null === $result || false === $smallestDelta) {
             return null;
         }
 
-        $ratio = $smallestDelta / strlen($string);
+        $ratio = $smallestDelta / \strlen($string);
 
         if ($ratio > self::THRESHOLD) {
             return null;
@@ -150,15 +148,14 @@ final class MyFuzzyStringSet implements FuzzyStringSetInterface
     }
 
     /**
-     * @param string $string
      * @return array<int, int>
      */
     private static function vec(string $string): array
     {
         $arr = self::EMPTY_ARRAY;
 
-        for ($i = 0, $l = strlen($string); $i < $l; $i++) {
-            $c = ord($string[$i]);
+        for ($i = 0, $l = \strlen($string); $i < $l; $i++) {
+            $c = \ord($string[$i]);
             $arr[$c]++;
         }
 

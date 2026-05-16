@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\TranslationLoader;
 
 use Mfn\PHPStanLostInTranslation\CallRule\InvalidCharacterEncodingRule;
@@ -46,22 +45,23 @@ final class PhpLoader
         $group = basename($file->getFilenameWithoutExtension());
 
         try {
-            $parserFactory = $this->parserFactory ?? new ParserFactory();
+            $parserFactory = $this->parserFactory ?? new ParserFactory;
             $parser = $parserFactory->createForHostVersion();
             $stmts = $parser->parse($file->getContents());
-            assert($stmts !== null);
+            \assert(null !== $stmts);
 
-            $visitor = new KeyLineNumberVisitor();
-            $traverser = new NodeTraverser();
+            $visitor = new KeyLineNumberVisitor;
+            $traverser = new NodeTraverser;
             $traverser->addVisitor($visitor);
             $traverser->traverse($stmts);
             $lineNumbers = $visitor->getLineNumbers();
         } catch (Error $e) {
-            $errors[] = RuleErrorBuilder::message(sprintf('Failed to parse file with error: %s', $e->getMessage()))
+            $errors[] = RuleErrorBuilder::message(\sprintf('Failed to parse file with error: %s', $e->getMessage()))
                 ->identifier(self::IDENTIFIER)
                 ->file($file->getPathname())
                 ->line($e->getStartLine())
                 ->build();
+
             return new LoadResult([], [], $errors);
         }
 
@@ -69,43 +69,44 @@ final class PhpLoader
             return require $__;
         })($file->getPathname());
 
-        if (!is_array($raw)) {
-            $errors[] = RuleErrorBuilder::message(sprintf('Invalid data type "%s"', gettype($raw)))
+        if (!\is_array($raw)) {
+            $errors[] = RuleErrorBuilder::message(\sprintf('Invalid data type "%s"', \gettype($raw)))
                 ->identifier(self::IDENTIFIER)
                 ->file($file->getPathname())
                 ->line(-1)
                 ->build();
+
             return new LoadResult([], [], $errors);
         }
 
         $lineNumbers = self::dot($lineNumbers, $group);
         /** @var array<non-empty-string, int> $lineNumbers */
-
         $raw = self::dot($raw, $group);
 
         /** @var array<non-empty-string, non-empty-string> $results */
         $results = [];
 
         foreach ($raw as $k => $v) {
-            $line = is_string($k) && isset($lineNumbers[$k]) ? $lineNumbers[$k] : -1;
+            $line = \is_string($k) && isset($lineNumbers[$k]) ? $lineNumbers[$k] : -1;
 
-            if (!is_string($v)) {
-                $errors[] = RuleErrorBuilder::message(sprintf("Invalid value: %s", json_encode($v, JSON_THROW_ON_ERROR)))
+            if (!\is_string($v)) {
+                $errors[] = RuleErrorBuilder::message(\sprintf('Invalid value: %s', json_encode($v, JSON_THROW_ON_ERROR)))
                     ->identifier(self::IDENTIFIER)
                     ->file($file->getPathname())
                     ->line($line)
                     ->build();
+
                 continue;
             }
 
             // discard empty keys and values
-            if (!is_string($k) || $k === '' || $v === '') {
+            if (!\is_string($k) || '' === $k || '' === $v) {
                 continue;
             }
 
             if ($this->invalidCharacterEncodings) {
                 if (!mb_check_encoding($k, 'UTF-8')) {
-                    $errors[] = RuleErrorBuilder::message(sprintf('Invalid character encoding for key: %s', Utils::e($k)))
+                    $errors[] = RuleErrorBuilder::message(\sprintf('Invalid character encoding for key: %s', Utils::e($k)))
                         ->identifier(InvalidCharacterEncodingRule::IDENTIFIER)
                         ->file($file->getPathname())
                         ->line($line)
@@ -113,7 +114,7 @@ final class PhpLoader
                 }
 
                 if (!mb_check_encoding($v, 'UTF-8')) {
-                    $errors[] = RuleErrorBuilder::message(sprintf('Invalid character encoding for value: %s', Utils::e($v)))
+                    $errors[] = RuleErrorBuilder::message(\sprintf('Invalid character encoding for value: %s', Utils::e($v)))
                         ->identifier(InvalidCharacterEncodingRule::IDENTIFIER)
                         ->file($file->getPathname())
                         ->line($line)
@@ -123,7 +124,6 @@ final class PhpLoader
 
             $results[$k] = $v;
         }
-
 
         return new LoadResult($results, $lineNumbers, $errors);
     }
@@ -140,13 +140,13 @@ final class PhpLoader
         foreach ($array as $key => $value) {
             if ('' === $prepend) {
                 $path = (string) $key;
-            } elseif (is_int($key)) {
-                $path = sprintf("%s.%d", $prepend, $key);
+            } elseif (\is_int($key)) {
+                $path = \sprintf('%s.%d', $prepend, $key);
             } else {
                 $path = $prepend . '.' . $key;
             }
 
-            if (is_array($value) && [] !== $value) {
+            if (\is_array($value) && [] !== $value) {
                 foreach (self::dot($value, $path) as $k2 => $v2) {
                     $results[$k2] = $v2;
                 }

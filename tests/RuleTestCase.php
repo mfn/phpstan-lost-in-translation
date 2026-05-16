@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests;
 
 use Mfn\PHPStanLostInTranslation\LostInTranslationHelper;
@@ -37,7 +36,7 @@ abstract class RuleTestCase extends BaseRuleTestCase
 
     protected bool $fuzzySearch = true;
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $this->lostInTranslationHelper = null;
         $this->translationLoader = null;

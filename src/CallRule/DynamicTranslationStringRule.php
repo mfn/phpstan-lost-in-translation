@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\CallRule;
 
 use Mfn\PHPStanLostInTranslation\TranslationCall;
@@ -31,8 +30,8 @@ final class DynamicTranslationStringRule implements CallRuleInterface
     {
         $errors = [];
 
-        if (count($call->keyType->getConstantStrings()) <= 0) {
-            $errors[] = RuleErrorBuilder::message(sprintf(
+        if (\count($call->keyType->getConstantStrings()) <= 0) {
+            $errors[] = RuleErrorBuilder::message(\sprintf(
                 'Disallowed dynamic translation string of type: %s',
                 $call->keyType->describe(VerbosityLevel::precise()),
             ))

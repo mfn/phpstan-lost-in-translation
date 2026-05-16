@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * Script takes JSON output from PHPStan and a list of expected errors. It checks this list matches.
  *
@@ -25,9 +25,11 @@ final class PHPStanResultsChecker
 
         $errorCount = $totals['errors'] ?? null;
         $this->assertInt($errorCount, 'Failed to find error count in PHPStan results');
-        if (intval($errorCount) > 0) {
+
+        if ($errorCount > 0) {
             $errors = $asJson['errors'] ?? null;
-            throw new RuntimeException('PHPStan reported errors: '.var_export($errors, true));
+
+            throw new RuntimeException('PHPStan reported errors: ' . var_export($errors, true));
         }
 
         $files = $asJson['files'] ?? null;
@@ -50,9 +52,10 @@ final class PHPStanResultsChecker
                 $this->assertString($identifier, 'Identifier is not a string in PHPStan results');
                 $cleanIdentifier = str_replace(self::IDENTIFIER_PREFIX, '', $identifier);
 
-                $key = sprintf('%s:%d:%s', $filePath, $line, $cleanIdentifier);
+                $key = \sprintf('%s:%d:%s', $filePath, $line, $cleanIdentifier);
 
                 $expectedResultsKey = array_search($key, $expectedResults, true);
+
                 if (false === $expectedResultsKey) {
                     $additionalReportedErrors[] = $key;
                 } else {
@@ -76,18 +79,22 @@ final class PHPStanResultsChecker
         throw new RuntimeException($errorMessage);
     }
 
-    /** @phpstan-assert array<mixed> $value  */
+    /**
+     * @phpstan-assert array<mixed> $value
+     */
     private function assertArray(mixed $value, string $error): void
     {
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             throw new RuntimeException($error);
         }
     }
 
-    /** @phpstan-assert string $value  */
+    /**
+     * @phpstan-assert string $value
+     */
     private function assertString(mixed $value, string $error): void
     {
-        if (!is_string($value)) {
+        if (!\is_string($value)) {
             throw new RuntimeException($error);
         }
     }
@@ -95,18 +102,21 @@ final class PHPStanResultsChecker
     private function getCleanFilename(string $fullFileName): string
     {
         $position = strpos($fullFileName, self::FILE_PATH_TO_REMOVE);
+
         if (false === $position) {
-            throw new RuntimeException('Failed to find '.self::FILE_PATH_TO_REMOVE.' in '.$fullFileName);
+            throw new RuntimeException('Failed to find ' . self::FILE_PATH_TO_REMOVE . ' in ' . $fullFileName);
         }
-        $filePath = substr($fullFileName, $position + strlen(self::FILE_PATH_TO_REMOVE));
+        $filePath = substr($fullFileName, $position + \strlen(self::FILE_PATH_TO_REMOVE));
 
         return str_replace('.php', '', $filePath);
     }
 
-    /** @phpstan-assert int $value  */
+    /**
+     * @phpstan-assert int $value
+     */
     private function assertInt(mixed $value, string $string): void
     {
-        if (!is_int($value)) {
+        if (!\is_int($value)) {
             throw new RuntimeException($string);
         }
     }

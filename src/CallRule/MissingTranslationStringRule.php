@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\CallRule;
 
 use Mfn\PHPStanLostInTranslation\TranslationCall;
@@ -47,22 +46,22 @@ final class MissingTranslationStringRule implements CallRuleInterface
                 }
             }
 
-            if (count($missingInLocales) > 0) {
-                $builder = RuleErrorBuilder::message(sprintf(
+            if (\count($missingInLocales) > 0) {
+                $builder = RuleErrorBuilder::message(\sprintf(
                     'Missing translation string %s for locales: %s',
                     Utils::e($key),
-                    join(', ', $missingInLocales),
+                    implode(', ', $missingInLocales),
                 ))
                     ->identifier(self::IDENTIFIER)
                     ->metadata(Utils::metadata(key: $key, missingInLocales: $missingInLocales))
                     ->line($call->line)
                     ->file($call->file);
 
-                if (strlen($key) > 0) {
+                if (\strlen($key) > 0) {
                     $similarKey = $this->loader->searchForSimilarKeys($key);
 
                     if (null !== $similarKey) {
-                        $builder->addTip(sprintf("Did you mean this similar key: %s", Utils::e($similarKey)));
+                        $builder->addTip(\sprintf('Did you mean this similar key: %s', Utils::e($similarKey)));
                     }
                 }
 

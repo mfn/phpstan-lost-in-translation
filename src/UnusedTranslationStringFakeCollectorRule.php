@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation;
 
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use Throwable;
 
 /**
  * @implements Rule<Node\Expr\CallLike>
@@ -53,7 +53,7 @@ final class UnusedTranslationStringFakeCollectorRule implements Rule
             }
 
             return [];
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ShouldNotHappenException::rethrow($e);
         }
     }

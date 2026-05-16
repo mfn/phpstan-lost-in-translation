@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Rule;
 
 use Mfn\PHPStanLostInTranslation\CallRule\CallRuleCollection;
@@ -25,6 +24,7 @@ use Mfn\PHPStanLostInTranslation\ShouldNotHappenException;
 use PhpParser\Node;
 use PHPStan\Analyser\Scope;
 use PHPStan\Rules\Rule;
+use Throwable;
 
 /**
  * @implements Rule<Node\Expr\CallLike>
@@ -48,7 +48,7 @@ final class LostInTranslationRule implements Rule
             $errors = [];
             $call = $this->helper->parseCallLike($node, $scope);
 
-            if ($call !== null) {
+            if (null !== $call) {
                 foreach ($this->rules as $rule) {
                     $errors = array_merge(
                         $errors,
@@ -58,7 +58,7 @@ final class LostInTranslationRule implements Rule
             }
 
             return $errors;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ShouldNotHappenException::rethrow($e);
         }
     }

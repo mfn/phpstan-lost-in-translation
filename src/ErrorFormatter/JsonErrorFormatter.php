@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\ErrorFormatter;
 
+use Closure;
 use Mfn\PHPStanLostInTranslation\CallRule\InvalidCharacterEncodingRule;
 use Mfn\PHPStanLostInTranslation\CallRule\MissingTranslationStringInBaseLocaleRule;
 use Mfn\PHPStanLostInTranslation\CallRule\MissingTranslationStringRule;
@@ -29,6 +29,7 @@ use Nette\Utils\Json;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\ErrorFormatter\ErrorFormatter;
 use PHPStan\Command\Output;
+use Throwable;
 
 /**
  * @phpstan-type MissingType array<string, array<string, null>>
@@ -36,17 +37,16 @@ use PHPStan\Command\Output;
  */
 final class JsonErrorFormatter implements ErrorFormatter
 {
-    private readonly \Closure $criticalLogger;
+    private readonly Closure $criticalLogger;
 
     /**
-     * @param bool $pretty
-     * @phpstan-param \Closure(string): void $criticalLogger
+     * @phpstan-param Closure(string): void $criticalLogger
      */
     public function __construct(
         private readonly bool $pretty = true,
-        ?\Closure $criticalLogger = null,
+        ?Closure $criticalLogger = null,
     ) {
-        $this->criticalLogger = $criticalLogger ?? static function (string $message) {
+        $this->criticalLogger = $criticalLogger ?? static function (string $message): void {
             error_log($message);
         };
     }
@@ -83,19 +83,23 @@ final class JsonErrorFormatter implements ErrorFormatter
 
                         foreach ($missingInLocales as $missingInLocale) {
                             $missing[$id][$missingInLocale][$key] = null;
-                        };
+                        }
+
                         break;
 
                     case MissingTranslationStringInBaseLocaleRule::IDENTIFIER:
                         $missing[$id][$locale][$key] = null;
+
                         break;
 
                     case InvalidCharacterEncodingRule::IDENTIFIER:
                         $other[$id][] = substr(Utils::e($key), 1, -1);
+
                         break;
 
                     default:
                         $other[$id][] = $key;
+
                         break;
                 }
             }
@@ -104,7 +108,7 @@ final class JsonErrorFormatter implements ErrorFormatter
             $output->writeRaw($json);
 
             return $analysisResult->hasErrors() ? 1 : 0;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // Seems to silence exceptions?
             ($this->criticalLogger)((string) $e);
             ShouldNotHappenException::rethrow($e);
