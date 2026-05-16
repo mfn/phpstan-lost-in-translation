@@ -17,7 +17,7 @@ jobs:
     phpstan:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
 
             - name: Install PHP
               uses: shivammathur/setup-php@v2
@@ -31,7 +31,7 @@ jobs:
 
             - name: Cache Composer packages
               id: composer-cache
-              uses: actions/cache@v4
+              uses: actions/cache@v5
               with:
                   path: vendor
                   key: ${{ runner.os }}-php8.5-${{ hashFiles('composer.json') }}
@@ -47,7 +47,7 @@ jobs:
     code-style:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
 
             - name: Install PHP
               uses: shivammathur/setup-php@v2
@@ -57,7 +57,7 @@ jobs:
                   tools: composer:v2
 
             - name: Cache cs-fixer
-              uses: actions/cache@v4
+              uses: actions/cache@v5
               with:
                   path: tools/cs-fixer/vendor
                   key: ${{ runner.os }}-cs-fixer-${{ hashFiles('tools/cs-fixer/composer.json') }}
@@ -84,7 +84,7 @@ jobs:
                     - php-version: "8.2"
                       laravel-version: "13"
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
 
             - name: Install PHP
               uses: shivammathur/setup-php@v2
@@ -95,7 +95,7 @@ jobs:
 
             - name: Cache Composer packages
               id: composer-cache
-              uses: actions/cache@v4
+              uses: actions/cache@v5
               with:
                   path: vendor
                   key: ${{ runner.os }}-php${{ matrix.php-version }}-${{ hashFiles('composer.json') }}-laravel${{ matrix.laravel-version }}
@@ -120,7 +120,7 @@ jobs:
     coverage:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
 
             - name: Install PHP
               uses: shivammathur/setup-php@v2
@@ -131,7 +131,7 @@ jobs:
 
             - name: Cache Composer packages
               id: composer-cache
-              uses: actions/cache@v4
+              uses: actions/cache@v5
               with:
                   path: vendor
                   key: ${{ runner.os }}-php8.5-${{ hashFiles('composer.json') }}
