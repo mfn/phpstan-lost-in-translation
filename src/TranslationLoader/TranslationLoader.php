@@ -17,14 +17,14 @@
  */
 declare(strict_types=1);
 
-namespace jbboehr\PHPStanLostInTranslation\TranslationLoader;
+namespace Mfn\PHPStanLostInTranslation\TranslationLoader;
 
-use jbboehr\PHPStanLostInTranslation\Fuzzy\FuzzyStringSetFactory;
-use jbboehr\PHPStanLostInTranslation\Fuzzy\FuzzyStringSetInterface;
-use jbboehr\PHPStanLostInTranslation\Fuzzy\NaiveFuzzyStringSet;
-use jbboehr\PHPStanLostInTranslation\Fuzzy\NullFuzzyStringSet;
-use jbboehr\PHPStanLostInTranslation\UsedTranslationRecord;
-use jbboehr\PHPStanLostInTranslation\Utils;
+use Mfn\PHPStanLostInTranslation\Fuzzy\FuzzyStringSetFactory;
+use Mfn\PHPStanLostInTranslation\Fuzzy\FuzzyStringSetInterface;
+use Mfn\PHPStanLostInTranslation\Fuzzy\NaiveFuzzyStringSet;
+use Mfn\PHPStanLostInTranslation\Fuzzy\NullFuzzyStringSet;
+use Mfn\PHPStanLostInTranslation\UsedTranslationRecord;
+use Mfn\PHPStanLostInTranslation\Utils;
 use PHPStan\Rules\IdentifierRuleError;
 use PHPStan\Rules\RuleErrorBuilder;
 use Symfony\Component\Finder\Finder;
@@ -390,7 +390,7 @@ class TranslationLoader
     {
         $dotCount = substr_count($key, '.');
 
-        if ($dotCount <= 0 || ($dotCount === 1 && $key[0] === '.' || $key[-1] === '.')) {
+        if ($dotCount <= 0 || $key[0] === '.' || $key[-1] === '.') {
             assert(strlen($key) > 0);
 
             return [null, $key, null];

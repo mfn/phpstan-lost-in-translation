@@ -17,7 +17,7 @@
  */
 declare(strict_types=1);
 
-namespace jbboehr\PHPStanLostInTranslation;
+namespace Mfn\PHPStanLostInTranslation;
 
 use Illuminate\Foundation\Application;
 use Symfony\Component\Intl\Locales;
@@ -140,7 +140,7 @@ final class Utils
 
             if ($c === '"') {
                 $buf .= '\"';
-            } elseif (ctype_print($c)) {
+            } elseif (ord($c) >= 0x20 && ord($c) < 0x7f) {
                 $buf .= $c;
             } else {
                 $buf .= sprintf("\x%02x", ord($c));
