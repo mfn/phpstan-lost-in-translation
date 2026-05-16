@@ -34,7 +34,7 @@ jobs:
                   php-version: "${{ matrix.php-version }}"
                   tools: composer:v2
 
-            - name: Validate composer.json and composer.lock
+            - name: Validate composer.json
               run: composer validate --strict
 
             - name: Cache Composer packages
@@ -42,12 +42,12 @@ jobs:
               uses: actions/cache@v4
               with:
                   path: vendor
-                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+                  key: ${{ runner.os }}-php${{ matrix.php-version }}-${{ hashFiles('composer.json') }}
                   restore-keys: |
-                      ${{ runner.os }}-php-
+                      ${{ runner.os }}-php${{ matrix.php-version }}-
 
             - name: Install dependencies
-              run: composer install --prefer-dist --no-progress --ignore-platform-req=php+
+              run: composer update --prefer-dist --no-progress --no-interaction
 
             - name: phpcs
               run: php vendor/bin/phpcs
@@ -86,9 +86,9 @@ jobs:
               uses: actions/cache@v4
               with:
                   path: vendor
-                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}-laravel${{ matrix.laravel-version }}-bladestan${{ matrix.bladestan-version }}
+                  key: ${{ runner.os }}-php${{ matrix.php-version }}-${{ hashFiles('composer.json') }}-laravel${{ matrix.laravel-version }}-bladestan${{ matrix.bladestan-version }}
                   restore-keys: |
-                      ${{ runner.os }}-php-
+                      ${{ runner.os }}-php${{ matrix.php-version }}-
 
             - name: Pin laravel and bladestan
               run: composer require --no-update --dev --no-progress --no-interaction --prefer-dist laravel/framework:^${{ matrix.laravel-version }} tomasvotruba/bladestan:^${{ matrix.bladestan-version }}
@@ -127,12 +127,12 @@ jobs:
               uses: actions/cache@v4
               with:
                   path: vendor
-                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+                  key: ${{ runner.os }}-php${{ matrix.php-version }}-${{ hashFiles('composer.json') }}
                   restore-keys: |
-                      ${{ runner.os }}-php-
+                      ${{ runner.os }}-php${{ matrix.php-version }}-
 
             - name: Install dependencies
-              run: composer install --prefer-dist --no-progress
+              run: composer update --prefer-dist --no-progress --no-interaction
 
             - name: Run test suite with coverage
               run: php vendor/bin/phpunit --coverage-text

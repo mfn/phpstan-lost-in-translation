@@ -3,6 +3,7 @@
 .phpunit.result.cache
 *.log
 clover.xml
+composer.lock
 result*
 /coverage/
 /vendor/
