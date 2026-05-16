@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      deps:
+        patterns:
+          - '*'
+
+  - package-ecosystem: composer
+    directories:
+      - /
+      - /tools/cs-fixer
+    schedule:
+      interval: monthly
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-patch
+          - version-update:semver-minor
+    groups:
+      deps:
+        patterns:
+          - '*'
