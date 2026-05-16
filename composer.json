@@ -16,12 +16,12 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-mbstring": "*",
-        "phpstan/phpstan": "^1.12 || ^2.0",
+        "phpstan/phpstan": "^2.0",
         "salsify/json-streaming-parser": "^8.3",
-        "symfony/finder": "^6 || ^7",
-        "symfony/intl": "^6 || ^7"
+        "symfony/finder": "^7",
+        "symfony/intl": "^7"
     },
     "autoload": {
         "psr-4": {
@@ -31,18 +31,17 @@
     "require-dev": {
         "composer-runtime-api": "*",
         "brick/varexporter": "*",
-        "larastan/larastan": "^2.11 || ^3.4",
-        "laravel/framework": "^9 || ^10 || ^11 || ^12",
+        "larastan/larastan": "^3.4",
+        "laravel/framework": "^12 || ^13",
         "loilo/fuse": "^7.1",
-        "orchestra/testbench": "^7.55 || ^8.36 || ^9.14 || ^10.3",
+        "orchestra/testbench": "^10.3",
         "phpbench/phpbench": "^1.4",
-        "phpstan/phpstan-phpunit": "^1.4.2 || ^2.0.6",
-        "phpstan/phpstan-strict-rules": "^1.6.2 || ^2.0.4",
-        "phpunit/phpunit": "^9.6 || ^10.5 || ^11.5",
+        "phpstan/phpstan-phpunit": "^2.0.6",
+        "phpstan/phpstan-strict-rules": "^2.0.4",
+        "phpunit/phpunit": "^11.5 || ^12.0",
         "slevomat/coding-standard": "^8.18",
         "squizlabs/php_codesniffer": "^3.13",
-        "tomasvotruba/bladestan": ">=0.6",
-        "webmozart/assert": "*"
+        "tomasvotruba/bladestan": "^0.11"
     },
     "autoload-dev": {
         "psr-4": {

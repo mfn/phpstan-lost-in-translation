@@ -24,14 +24,15 @@ use Mfn\PHPStanLostInTranslation\Tests\Benchmark\AbstractFuzzyStringSetBenchmark
 use Mfn\PHPStanLostInTranslation\Tests\Benchmark\FuseFuzzyStringSetBenchmark;
 use Mfn\PHPStanLostInTranslation\Tests\Benchmark\MyFuzzyStringSetBenchmark;
 use Mfn\PHPStanLostInTranslation\Tests\Benchmark\NaiveFuzzyStringSetBenchmark;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class FuzzyStringSetTest extends TestCase
 {
     /**
-     * @dataProvider benchmarkProvider
      * @param class-string<AbstractFuzzyStringSetBenchmark> $className
      */
+    #[DataProvider('benchmarkProvider')]
     public function testDataSet1(string $className): void
     {
         self::expectNotToPerformAssertions();
@@ -44,9 +45,9 @@ final class FuzzyStringSetTest extends TestCase
     }
 
     /**
-     * @dataProvider benchmarkProvider
      * @param class-string<AbstractFuzzyStringSetBenchmark> $className
      */
+    #[DataProvider('benchmarkProvider')]
     public function testDataSet1Memoized(string $className): void
     {
         self::expectNotToPerformAssertions();
@@ -62,9 +63,9 @@ final class FuzzyStringSetTest extends TestCase
     }
 
     /**
-     * @dataProvider benchmarkProvider
      * @param class-string<AbstractFuzzyStringSetBenchmark> $className
      */
+    #[DataProvider('benchmarkProvider')]
     public function testDataSet2(string $className): void
     {
         self::expectNotToPerformAssertions();

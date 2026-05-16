@@ -20,6 +20,3 @@ parameters:
         - tests/**/lang*/*
     lostInTranslation:
         langPath: tests/lang
-    ignoreErrors:
-      - message: "#^Undefined variable\\: \\$this$#"
-        path: tests/ErrorFormatter/JsonErrorFormatterTest.php

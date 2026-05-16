@@ -5,6 +5,9 @@ upstream history before the fork point is not tracked here.
 
 ## [Unreleased]
 
+### Changed
+- Raised minimum PHP version to 8.2 and Laravel to 12
+  (and bumping all the deps minimum versions too)
 
 ## [0.1.0] - 2026-05-16
 

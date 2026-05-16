@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Mfn\PHPStanLostInTranslation\Tests\TranslationLoader;
 
 use Mfn\PHPStanLostInTranslation\TranslationLoader\TranslationLoader;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class TranslationLoaderTest extends TestCase
@@ -41,9 +42,9 @@ final class TranslationLoaderTest extends TestCase
     }
 
     /**
-     * @dataProvider parseKeyProvider
      * @param array{string, string} $expected
      */
+    #[DataProvider('parseKeyProvider')]
     public function testParseKey(string $input, array $expected): void
     {
         $loader = $this->createLoader();

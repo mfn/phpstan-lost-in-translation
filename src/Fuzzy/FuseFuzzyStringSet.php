@@ -53,7 +53,10 @@ final class FuseFuzzyStringSet implements FuzzyStringSetInterface
 
     public function search(string $string): ?string
     {
-        $result = $this->fuse->search($string)[0]['item'] ?? null;
+        $hit = $this->fuse->search($string)[0] ?? null;
+        $result = is_array($hit) && isset($hit['item']) && is_string($hit['item']) && $hit['item'] !== ''
+            ? $hit['item']
+            : null;
 
         if (null !== $result) {
             $ratio = levenshtein($string, $result) / strlen($string);

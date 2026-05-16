@@ -1,13 +1,10 @@
 * text=auto
 
-composer.lock linguist-generated
-
 .editorconfig export-ignore
 .gitattributes export-ignore
 .github/ export-ignore
 .gitignore export-ignore
 .phpcs.xml.dist export-ignore
-composer.lock export-ignore
 e2e/ export-ignore
 phpbench.json export-ignore
 phpstan-strict-rules.php export-ignore

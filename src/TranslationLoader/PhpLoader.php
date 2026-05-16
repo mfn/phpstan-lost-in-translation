@@ -87,7 +87,7 @@ final class PhpLoader
         $results = [];
 
         foreach ($raw as $k => $v) {
-            $line = $lineNumbers[$k] ?? -1;
+            $line = is_string($k) && isset($lineNumbers[$k]) ? $lineNumbers[$k] : -1;
 
             if (!is_string($v)) {
                 $errors[] = RuleErrorBuilder::message(sprintf("Invalid value: %s", json_encode($v, JSON_THROW_ON_ERROR)))
@@ -99,7 +99,7 @@ final class PhpLoader
             }
 
             // discard empty keys and values
-            if (strlen($k) <= 0 || strlen($v) <= 0) {
+            if (!is_string($k) || $k === '' || $v === '') {
                 continue;
             }
 
@@ -146,7 +146,7 @@ final class PhpLoader
                 $path = $prepend . '.' . $key;
             }
 
-            if (is_array($value) && ! empty($value)) {
+            if (is_array($value) && [] !== $value) {
                 foreach (self::dot($value, $path) as $k2 => $v2) {
                     $results[$k2] = $v2;
                 }

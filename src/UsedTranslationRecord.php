@@ -55,7 +55,13 @@ final class UsedTranslationRecord implements \JsonSerializable
         }
 
         // Keys with binary data fail to serialize when transferred from the phpstan worker
-        $call = unserialize(base64_decode($buffer));
+        $decoded = base64_decode($buffer, true);
+
+        if (false === $decoded) {
+            throw new \DomainException();
+        }
+
+        $call = unserialize($decoded);
 
         if (!($call instanceof self)) {
             throw new \DomainException();
