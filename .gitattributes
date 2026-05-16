@@ -4,10 +4,12 @@
 .gitattributes export-ignore
 .github/ export-ignore
 .gitignore export-ignore
-.phpcs.xml.dist export-ignore
+.php-cs-fixer.cache export-ignore
+.php-cs-fixer.dist.php export-ignore
 e2e/ export-ignore
 phpbench.json export-ignore
 phpstan-strict-rules.php export-ignore
 phpstan.neon.dist export-ignore
 phpunit.xml.dist export-ignore
 tests/ export-ignore
+tools/ export-ignore
