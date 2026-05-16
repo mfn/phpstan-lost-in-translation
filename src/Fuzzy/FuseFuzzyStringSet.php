@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Fuzzy;
 
 use Fuse\Fuse;
@@ -54,12 +53,12 @@ final class FuseFuzzyStringSet implements FuzzyStringSetInterface
     public function search(string $string): ?string
     {
         $hit = $this->fuse->search($string)[0] ?? null;
-        $result = is_array($hit) && isset($hit['item']) && is_string($hit['item']) && $hit['item'] !== ''
+        $result = \is_array($hit) && isset($hit['item']) && \is_string($hit['item']) && '' !== $hit['item']
             ? $hit['item']
             : null;
 
         if (null !== $result) {
-            $ratio = levenshtein($string, $result) / strlen($string);
+            $ratio = levenshtein($string, $result) / \strlen($string);
 
             if ($ratio > self::THRESHOLD) {
                 return null;

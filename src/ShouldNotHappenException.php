@@ -15,28 +15,30 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation;
 
-final class ShouldNotHappenException extends \RuntimeException
+use RuntimeException;
+use Throwable;
+
+final class ShouldNotHappenException extends RuntimeException
 {
     private const URL = 'https://github.com/mfn/phpstan-lost-in-translation/issues';
 
     /**
      * @throws self
      */
-    public static function rethrow(\Throwable $e): never
+    public static function rethrow(Throwable $e): never
     {
         throw new self($e->getMessage(), $e);
     }
 
     public function __construct(
         string $message = 'Internal error',
-        ?\Throwable $previous = null,
+        ?Throwable $previous = null,
     ) {
         parent::__construct(
-            sprintf('%s, please open an issue on GitHub %s', $message, self::URL),
+            \sprintf('%s, please open an issue on GitHub %s', $message, self::URL),
             0,
             $previous,
         );

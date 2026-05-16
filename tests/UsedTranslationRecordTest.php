@@ -15,11 +15,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests;
 
+use DomainException;
 use Mfn\PHPStanLostInTranslation\UsedTranslationRecord;
+use stdClass;
 
 final class UsedTranslationRecordTest extends \PHPUnit\Framework\TestCase
 {
@@ -33,22 +34,22 @@ final class UsedTranslationRecordTest extends \PHPUnit\Framework\TestCase
         );
 
         /** @phpstan-ignore-next-line argument.type */
-        $this->assertEquals($call, UsedTranslationRecord::fromJsonArray(json_decode(json_encode($call), true)));
+        self::assertEquals($call, UsedTranslationRecord::fromJsonArray(json_decode(json_encode($call), true)));
     }
 
     public function testInvalidSerializationWithInvalidArray(): void
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
 
         UsedTranslationRecord::fromJsonArray([]);
     }
 
     public function testInvalidSerializationWithInvalidClass(): void
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
 
         UsedTranslationRecord::fromJsonArray([
-            UsedTranslationRecord::class => base64_encode(serialize(new \stdClass())),
+            UsedTranslationRecord::class => base64_encode(serialize(new stdClass)),
         ]);
     }
 }

@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\CallRule;
 
 use Mfn\PHPStanLostInTranslation\TranslationCall;
@@ -26,8 +25,8 @@ use PHPStan\ShouldNotHappenException;
 interface CallRuleInterface
 {
     /**
-     * @return list<IdentifierRuleError>
      * @throws ShouldNotHappenException
+     * @return list<IdentifierRuleError>
      */
     public function processCall(TranslationCall $call): array;
 }

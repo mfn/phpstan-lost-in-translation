@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests\CallRule;
 
 use Mfn\PHPStanLostInTranslation\CallRule\CallRuleCollection;
@@ -28,22 +27,22 @@ class CallRuleCollectionTest extends TestCase
 {
     public function testMissingParameterDoesNotThrow(): void
     {
-        $mock = $this->createStub(Container::class);
+        $mock = self::createStub(Container::class);
         $mock->method('getParameter')
             /** @phpstan-ignore-next-line phpstanApi.constructor */
             ->willThrowException(new ParameterNotFoundException('lostInTranslation'));
 
         $collection = new CallRuleCollection($mock);
-        $this->assertCount(0, $collection);
+        self::assertCount(0, $collection);
     }
 
     public function testNonArrayParameterDoesNotThrow(): void
     {
-        $mock = $this->createStub(Container::class);
+        $mock = self::createStub(Container::class);
         $mock->method('getParameter')
             ->willReturn('foo');
 
         $collection = new CallRuleCollection($mock);
-        $this->assertCount(0, $collection);
+        self::assertCount(0, $collection);
     }
 }

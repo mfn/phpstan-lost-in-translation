@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\CallRule;
 
 use Mfn\PHPStanLostInTranslation\TranslationCall;
@@ -33,7 +32,7 @@ final class InvalidCharacterEncodingRule implements CallRuleInterface
 
         foreach ($call->possibleTranslations as $key => $items) {
             if (!mb_check_encoding($key, 'UTF-8')) {
-                $errors[] = RuleErrorBuilder::message(sprintf(
+                $errors[] = RuleErrorBuilder::message(\sprintf(
                     'Invalid character encoding for key %s',
                     Utils::e($key),
                 ))
@@ -45,8 +44,8 @@ final class InvalidCharacterEncodingRule implements CallRuleInterface
             }
 
             foreach ($items as [$locale, $value]) {
-                if ($value !== null && !mb_check_encoding($value, 'UTF-8')) {
-                    $errors[] = RuleErrorBuilder::message(sprintf(
+                if (null !== $value && !mb_check_encoding($value, 'UTF-8')) {
+                    $errors[] = RuleErrorBuilder::message(\sprintf(
                         'Invalid character encoding for value %s in locale %s',
                         Utils::e($key),
                         Utils::e($locale),

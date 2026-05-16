@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\CallRule;
 
 use Mfn\PHPStanLostInTranslation\TranslationCall;
@@ -41,7 +40,7 @@ final class MissingTranslationStringInBaseLocaleRule implements CallRuleInterfac
         foreach ($call->possibleTranslations as $key => $items) {
             foreach ($items as [$locale, $value]) {
                 if ($locale === $baseLocale && null === $value && self::isLikelyUntranslated($key)) {
-                    $errors[] = RuleErrorBuilder::message(sprintf(
+                    $errors[] = RuleErrorBuilder::message(\sprintf(
                         'Likely missing translation string %s for base locale: %s',
                         json_encode($key, JSON_THROW_ON_ERROR),
                         $baseLocale,

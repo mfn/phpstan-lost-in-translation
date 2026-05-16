@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
+declare(strict_types = 1);
 
 // Make sure to load phpstan's phpparser before phpunit's otherwise there are weird class conflicts
 require_once 'phar://' . __DIR__ . '/../vendor/phpstan/phpstan/phpstan.phar/vendor/autoload.php';

@@ -15,10 +15,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\CallRule;
 
+use ArrayIterator;
+use Countable;
 use IteratorAggregate;
 use PHPStan\DependencyInjection\Container;
 use PHPStan\DependencyInjection\ParameterNotFoundException;
@@ -27,7 +28,7 @@ use Traversable;
 /**
  * @implements IteratorAggregate<int, CallRuleInterface>
  */
-final class CallRuleCollection implements IteratorAggregate, \Countable
+final class CallRuleCollection implements IteratorAggregate, Countable
 {
     private const FLAG_MAP = [
         'disallowDynamicTranslationStrings' => DynamicTranslationStringRule::class,
@@ -39,26 +40,24 @@ final class CallRuleCollection implements IteratorAggregate, \Countable
         'missingTranslationStrings' => MissingTranslationStringRule::class,
     ];
 
-    /**
-     * @var list<CallRuleInterface>
-     */
+    /** @var list<CallRuleInterface> */
     private array $rules = [];
 
     /**
      * @param list<CallRuleInterface> $rules
-     * @return self
      */
     public static function createFromArray(array $rules): self
     {
         $self = new self(null);
         $self->rules = $rules;
+
         return $self;
     }
 
     public function __construct(
         ?Container $container,
     ) {
-        if ($container === null) {
+        if (null === $container) {
             return;
         }
 
@@ -68,7 +67,7 @@ final class CallRuleCollection implements IteratorAggregate, \Countable
             return;
         }
 
-        if (!is_array($flags)) {
+        if (!\is_array($flags)) {
             return;
         }
 
@@ -85,11 +84,11 @@ final class CallRuleCollection implements IteratorAggregate, \Countable
 
     public function getIterator(): Traversable
     {
-        return new \ArrayIterator($this->rules);
+        return new ArrayIterator($this->rules);
     }
 
     public function count(): int
     {
-        return count($this->rules);
+        return \count($this->rules);
     }
 }

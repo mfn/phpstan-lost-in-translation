@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Rule;
 
 use Mfn\PHPStanLostInTranslation\CallRule\InvalidLocaleRule;
@@ -28,6 +27,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
+use Throwable;
 
 /**
  * @implements Rule<CollectedDataNode>
@@ -56,7 +56,7 @@ final class TranslationLoaderErrorRule implements Rule
                     if (!Utils::checkLocaleExists($locale, $this->strictLocales)) {
                         $file = $localeFiles[0];
 
-                        $errors[] = RuleErrorBuilder::message(sprintf(
+                        $errors[] = RuleErrorBuilder::message(\sprintf(
                             'Unknown locale: %s',
                             $locale,
                         ))
@@ -69,7 +69,7 @@ final class TranslationLoaderErrorRule implements Rule
             }
 
             return $errors;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             ShouldNotHappenException::rethrow($e);
         }
     }

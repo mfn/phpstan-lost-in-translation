@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\CallRule;
 
 use Mfn\PHPStanLostInTranslation\TranslationCall;
@@ -52,8 +51,8 @@ final class InvalidChoiceRule implements CallRuleInterface
     }
 
     /**
-     * @return list<IdentifierRuleError>
      * @throws PHPStanShouldNotHappenException
+     * @return list<IdentifierRuleError>
      * @see MessageSelector::choose()
      */
     private function analyzeChoices(TranslationCall $call, string $locale, string $key, string $value): array
@@ -70,24 +69,25 @@ final class InvalidChoiceRule implements CallRuleInterface
 
         foreach ($segments as $segment) {
             if (1 !== preg_match('/^[\{\[]([^\[\]\{\}]*)[\}\]](.*)/s', $segment, $matches, PREG_UNMATCHED_AS_NULL)) {
-                if (count($segments) === 2 && 1 !== preg_match('~^[\[{]~', ltrim($segment))) {
+                if (2 === \count($segments) && 1 !== preg_match('~^[\[{]~', ltrim($segment))) {
                     // If it has exactly two segments and doesn't start with "{" or "[", it's probably the singular/plural variant
                     continue;
                 }
 
-                $errors[] = RuleErrorBuilder::message(sprintf('Failed to parse translation choice: %s', Utils::e($segment)))
+                $errors[] = RuleErrorBuilder::message(\sprintf('Failed to parse translation choice: %s', Utils::e($segment)))
                     ->identifier(self::IDENTIFIER_MALFORMED)
                     ->metadata(Utils::metadata(key: $key, locale: $locale, value: $value))
                     ->addTip(Utils::formatTipForKeyValue($locale, $key, $value))
                     ->line($call->line)
                     ->file($call->file)
                     ->build();
+
                 continue;
             }
 
             /** this may have been failing due to weird return value of preg_match, probably fixed */
             /** @phpstan-ignore-next-line smaller.alwaysFalse */
-            assert(count($matches) >= 2);
+            \assert(\count($matches) >= 2);
 
             [, $condition] = $matches;
 
@@ -97,27 +97,31 @@ final class InvalidChoiceRule implements CallRuleInterface
                 $from = $to = $condition;
             }
 
-            if (!is_numeric($from) && $from !== '*') {
-                $errors[] = RuleErrorBuilder::message(sprintf('Translation choice has non-numeric value: %s', Utils::e($from)))
+            if (!is_numeric($from) && '*' !== $from) {
+                $errors[] = RuleErrorBuilder::message(\sprintf('Translation choice has non-numeric value: %s', Utils::e($from)))
                     ->identifier(self::IDENTIFIER_NON_NUMERIC)
                     ->metadata(Utils::metadata(key: $key, locale: $locale, value: $value))
                     ->addTip(Utils::formatTipForKeyValue($locale, $key, $value))
                     ->line($call->line)
                     ->file($call->file)
                     ->build();
-                continue;
-            } elseif (!is_numeric($to) && $to !== '*') {
-                $errors[] = RuleErrorBuilder::message(sprintf('Translation choice has non-numeric value: %s', Utils::e($to)))
-                    ->identifier(self::IDENTIFIER_NON_NUMERIC)
-                    ->metadata(Utils::metadata(key: $key, locale: $locale, value: $value))
-                    ->addTip(Utils::formatTipForKeyValue($locale, $key, $value))
-                    ->line($call->line)
-                    ->file($call->file)
-                    ->build();
+
                 continue;
             }
 
-            if ($from === '*' && $to === '*') {
+            if (!is_numeric($to) && '*' !== $to) {
+                $errors[] = RuleErrorBuilder::message(\sprintf('Translation choice has non-numeric value: %s', Utils::e($to)))
+                    ->identifier(self::IDENTIFIER_NON_NUMERIC)
+                    ->metadata(Utils::metadata(key: $key, locale: $locale, value: $value))
+                    ->addTip(Utils::formatTipForKeyValue($locale, $key, $value))
+                    ->line($call->line)
+                    ->file($call->file)
+                    ->build();
+
+                continue;
+            }
+
+            if ('*' === $from && '*' === $to) {
                 continue;
             }
 
@@ -126,9 +130,9 @@ final class InvalidChoiceRule implements CallRuleInterface
             //     $from = '*';
             // }
 
-            if ($from === '*') {
+            if ('*' === $from) {
                 $segmentType = IntegerRangeType::fromInterval(null, (int) $to);
-            } elseif ($to === '*') {
+            } elseif ('*' === $to) {
                 $segmentType = IntegerRangeType::fromInterval((int) $from, null);
             } elseif ($from === $to) {
                 $segmentType = new ConstantIntegerType((int) $from);
@@ -144,7 +148,7 @@ final class InvalidChoiceRule implements CallRuleInterface
         }
 
         if (null !== $unionType && !$unionType->accepts($numberType, true)->yes()) {
-            $errors[] = RuleErrorBuilder::message(sprintf(
+            $errors[] = RuleErrorBuilder::message(\sprintf(
                 'Translation choice does not cover all possible cases for number of type: %s',
                 $numberType->describe(VerbosityLevel::precise()),
             ))

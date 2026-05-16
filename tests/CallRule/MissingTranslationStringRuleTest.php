@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests\CallRule;
 
 use Mfn\PHPStanLostInTranslation\CallRule\CallRuleCollection;
@@ -128,15 +127,15 @@ class MissingTranslationStringRuleTest extends RuleTestCase
                 'Missing translation string "foo" for locales: ja, zh',
                 7,
             ],
-// not sure why this is not working
-//            [
-//                'Missing translation string "three" for locales: ja, zh',
-//                16,
-//            ],
-//            [
-//                'Missing translation string "two" for locales: ja, zh',
-//                16,
-//            ],
+            // not sure why this is not working
+            //            [
+            //                'Missing translation string "three" for locales: ja, zh',
+            //                16,
+            //            ],
+            //            [
+            //                'Missing translation string "two" for locales: ja, zh',
+            //                16,
+            //            ],
             [
                 'Missing translation string "foo" for locales: ja, zh',
                 19,

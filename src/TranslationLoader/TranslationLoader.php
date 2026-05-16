@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\TranslationLoader;
 
 use Mfn\PHPStanLostInTranslation\Fuzzy\FuzzyStringSetFactory;
@@ -68,15 +67,15 @@ class TranslationLoader
 
     private readonly FuzzyStringSetInterface $searchDatabase;
 
-    /** @var array<non-empty-string, array{non-empty-string, non-empty-string}>  */
+    /** @var array<non-empty-string, array{non-empty-string, non-empty-string}> */
     private array $parsed = [];
 
     public function __construct(
         ?string $langPath = null,
         ?string $baseLocale = null,
         bool $fuzzySearch = true,
-        private readonly PhpLoader $phpLoader = new PhpLoader(),
-        private readonly JsonLoader $jsonLoader = new JsonLoader(),
+        private readonly PhpLoader $phpLoader = new PhpLoader,
+        private readonly JsonLoader $jsonLoader = new JsonLoader,
         ?FuzzyStringSetFactory $fuzzyStringSetFactory = null,
     ) {
         $this->langPath = realpath($langPath ?? Utils::detectLangPath()) ?: Utils::detectLangPath();
@@ -103,7 +102,7 @@ class TranslationLoader
     {
         [$namespace, $key] = $this->parseKey($key);
 
-        if (strlen($key) <= 0) {
+        if (\strlen($key) <= 0) {
             return;
         }
 
@@ -111,7 +110,6 @@ class TranslationLoader
 
         $this->searchDatabase->addMany([$key, $value]);
     }
-
 
     public function getBaseLocale(): string
     {
@@ -143,7 +141,7 @@ class TranslationLoader
     {
         [$namespace, $key] = $this->parseKey($key);
 
-        if (strlen($key) <= 0) {
+        if (\strlen($key) <= 0) {
             return null;
         }
 
@@ -174,7 +172,7 @@ class TranslationLoader
                 $set = $sets[$item->locale] = $this->fuzzyStringSetFactory->createFuzzyStringSet();
             }
 
-            if (strlen($item->key) > 0) {
+            if (\strlen($item->key) > 0) {
                 $set->add($item->key);
             }
 
@@ -188,7 +186,7 @@ class TranslationLoader
                 foreach ($namespaceData as $item => $value) {
                     $key = $item;
 
-                    if ($namespace !== '*') {
+                    if ('*' !== $namespace) {
                         $key = $namespace . '::' . $key;
                     }
 
@@ -237,7 +235,7 @@ class TranslationLoader
      */
     public function parseKey(string $key): array
     {
-        if (strlen($key) <= 0) {
+        if (\strlen($key) <= 0) {
             return ['*', ''];
         }
 
@@ -251,11 +249,11 @@ class TranslationLoader
             $segments = self::parseNamespacedSegments($key);
         }
 
-        if (is_null($segments[0])) {
+        if (null === $segments[0]) {
             $segments[0] = '*';
         }
 
-        if (is_null($segments[2])) {
+        if (null === $segments[2]) {
             $key = $segments[1];
         } else {
             $key = $segments[1] . '.' . $segments[2];
@@ -323,7 +321,7 @@ class TranslationLoader
                 $line = ($result->locations[$k] ?? -1);
 
                 if (isset($this->data[$locale][$namespace][$k])) {
-                    $this->errors[] = RuleErrorBuilder::message(sprintf("Conflicting key: %s", Utils::e($k)))
+                    $this->errors[] = RuleErrorBuilder::message(\sprintf('Conflicting key: %s', Utils::e($k)))
                         ->identifier(self::IDENTIFIER_CONFLICT)
                         ->file($file->getPathname())
                         ->line($line)
@@ -369,11 +367,11 @@ class TranslationLoader
     {
         [$namespace, $item] = explode('::', $key);
 
-        if (strlen($namespace) <= 0 || strlen($item) <= 0) {
+        if (\strlen($namespace) <= 0 || \strlen($item) <= 0) {
             return ['*', $key, null];
         }
 
-        $groupAndItem = array_slice(
+        $groupAndItem = \array_slice(
             self::parseBasicSegments($item),
             1,
         );
@@ -390,8 +388,8 @@ class TranslationLoader
     {
         $dotCount = substr_count($key, '.');
 
-        if ($dotCount <= 0 || $key[0] === '.' || $key[-1] === '.') {
-            assert(strlen($key) > 0);
+        if ($dotCount <= 0 || '.' === $key[0] || '.' === $key[-1]) {
+            \assert(\strlen($key) > 0);
 
             return [null, $key, null];
         }
@@ -399,13 +397,13 @@ class TranslationLoader
         $segments = explode('.', $key);
         $group = $segments[0];
 
-        assert(strlen($group) > 0);
+        \assert(\strlen($group) > 0);
 
-        if (count($segments) <= 1) {
+        if (\count($segments) <= 1) {
             return [null, $group, null];
         }
 
-        $item = implode('.', array_slice($segments, 1));
+        $item = implode('.', \array_slice($segments, 1));
 
         return [null, $group, $item];
     }

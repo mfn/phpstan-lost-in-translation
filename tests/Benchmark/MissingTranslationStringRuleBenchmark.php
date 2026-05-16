@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests\Benchmark;
 
 use Mfn\PHPStanLostInTranslation\CallRule\MissingTranslationStringRule;
@@ -73,8 +72,8 @@ final class MissingTranslationStringRuleBenchmark
         $chars = '';
 
         for ($i = 0; $i <= 255; $i++) {
-            if (ctype_print(chr($i))) {
-                $chars .= chr($i);
+            if (ctype_print(\chr($i))) {
+                $chars .= \chr($i);
             }
         }
 
@@ -82,10 +81,10 @@ final class MissingTranslationStringRuleBenchmark
             $buf = '';
 
             for ($j = 0, $l = mt_rand(5, 100); $j < $l; $j++) {
-                $buf .= $chars[mt_rand(0, strlen($chars) - 1)];
+                $buf .= $chars[mt_rand(0, \strlen($chars) - 1)];
             }
 
-            if (strlen($buf) > 0) {
+            if (\strlen($buf) > 0) {
                 $this->loader->add('ja', $buf, $buf);
             }
         }

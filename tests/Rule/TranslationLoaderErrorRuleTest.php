@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests\Rule;
 
 use Illuminate\Foundation\Bootstrap\HandleExceptions;
@@ -29,6 +28,7 @@ use PhpParser\Node\Expr\FuncCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
+use RuntimeException;
 
 /**
  * @extends RuleTestCase<TranslationLoaderErrorRule>
@@ -43,7 +43,7 @@ class TranslationLoaderErrorRuleTest extends RuleTestCase
         );
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         $this->translationLoader = null;
 
@@ -66,17 +66,17 @@ class TranslationLoaderErrorRuleTest extends RuleTestCase
         ], [
             // lang-warn/es.json
             [
-                "Invalid key: 0",
+                'Invalid key: 0',
                 2,
             ],
             // lang-warn/ja.json
             [
-                "Failed to parse JSON: Syntax error",
+                'Failed to parse JSON: Syntax error',
                 -1,
             ],
             // lang-warn/pt.json
             [
-                "Invalid value: 1",
+                'Invalid value: 1',
                 2,
             ],
             [
@@ -95,7 +95,7 @@ class TranslationLoaderErrorRuleTest extends RuleTestCase
             ],
             // lang/zh/more-messages.php
             [
-                "Invalid value: 1",
+                'Invalid value: 1',
                 2,
             ],
             // lang/invalid_locale.json
@@ -126,14 +126,14 @@ class TranslationLoaderErrorRuleTest extends RuleTestCase
     public function testExceptionConversion(): void
     {
         if (!class_exists(FuncCall::class)) {
-            $this->markTestIncomplete('This seems to fail when you filter, probably PHPStan autoload does not get initialized');
+            self::markTestIncomplete('This seems to fail when you filter, probably PHPStan autoload does not get initialized');
         }
 
-        $ex = new \RuntimeException(self::class);
+        $ex = new RuntimeException(self::class);
         /** @phpstan-ignore-next-line phpstanApi.constructor */
         $node = new CollectedDataNode([], false);
 
-        $loader = $this->createStub(TranslationLoader::class);
+        $loader = self::createStub(TranslationLoader::class);
         $loader->method('getErrors')
             ->willThrowException($ex);
 
@@ -145,7 +145,7 @@ class TranslationLoaderErrorRuleTest extends RuleTestCase
         $obj->processNode(
             $node,
             // @phpstan-ignore-next-line argument.type
-            $this->createStub(Scope::class),
+            self::createStub(Scope::class),
         );
     }
 }

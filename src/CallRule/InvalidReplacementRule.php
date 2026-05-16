@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\CallRule;
 
 use Mfn\PHPStanLostInTranslation\TranslationCall;
@@ -48,8 +47,8 @@ final class InvalidReplacementRule implements CallRuleInterface
     }
 
     /**
-     * @return list<IdentifierRuleError>
      * @throws PHPStanShouldNotHappenException
+     * @return list<IdentifierRuleError>
      */
     private function analyzeReplacements(TranslationCall $call, string $locale, string $key, string $value): array
     {
@@ -61,6 +60,7 @@ final class InvalidReplacementRule implements CallRuleInterface
         $errors = [];
 
         $replaceKeys = [];
+
         foreach ($call->replaceType->getConstantArrays() as $constantArray) {
             foreach ($constantArray->getKeyType()->getConstantStrings() as $constantString) {
                 $replaceKeys[] = $constantString->getValue();
@@ -75,8 +75,8 @@ final class InvalidReplacementRule implements CallRuleInterface
                 + (int) str_contains($value, ':' . mb_strtoupper($search, 'UTF-8'))
                 + (int) str_contains($value, ':' . $search);
 
-            if ($replaceVariantCount === 0) {
-                $errors[] = RuleErrorBuilder::message(sprintf('Unused translation replacement: %s', Utils::e($search)))
+            if (0 === $replaceVariantCount) {
+                $errors[] = RuleErrorBuilder::message(\sprintf('Unused translation replacement: %s', Utils::e($search)))
                     ->identifier(self::IDENTIFIER_UNUSED)
                     ->metadata(Utils::metadata(key: $key, locale: $locale, value: $value))
                     ->addTip(Utils::formatTipForKeyValue($locale, $key, $value))
@@ -84,7 +84,7 @@ final class InvalidReplacementRule implements CallRuleInterface
                     ->file($call->file)
                     ->build();
             } elseif ($replaceVariantCount > 1) {
-                $errors[] = RuleErrorBuilder::message(sprintf('Replacement string matches multiple variants: %s', Utils::e($search)))
+                $errors[] = RuleErrorBuilder::message(\sprintf('Replacement string matches multiple variants: %s', Utils::e($search)))
                     ->identifier(self::IDENTIFIER_MULTIPLE_VARIANTS)
                     ->metadata(Utils::metadata(key: $key, locale: $locale, value: $value))
                     ->addTip(Utils::formatTipForKeyValue($locale, $key, $value))

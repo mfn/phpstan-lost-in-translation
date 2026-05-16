@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests\Collector;
 
 use Mfn\PHPStanLostInTranslation\LostInTranslationHelper;
@@ -25,23 +24,24 @@ use Mfn\PHPStanLostInTranslation\UnusedTranslationStringCollector;
 use Mfn\PHPStanLostInTranslation\UnusedTranslationStringFakeCollectorRule;
 use PhpParser\Node\Expr\FuncCall;
 use PHPStan\Analyser\Scope;
+use RuntimeException;
 
 final class UnusedTranslationStringFakeCollectorRuleTest extends \PHPUnit\Framework\TestCase
 {
     public function testExceptionConversion(): void
     {
         if (!class_exists(FuncCall::class)) {
-            $this->markTestIncomplete('This seems to fail when you filter, probably PHPStan autoload does not get initialized');
+            self::markTestIncomplete('This seems to fail when you filter, probably PHPStan autoload does not get initialized');
         }
 
-        $ex = new \RuntimeException(self::class);
-        $node = $this->createStub(FuncCall::class);
+        $ex = new RuntimeException(self::class);
+        $node = self::createStub(FuncCall::class);
 
-        $helper = $this->createStub(LostInTranslationHelper::class);
+        $helper = self::createStub(LostInTranslationHelper::class);
         $helper->method('parseCallLike')
             ->willThrowException($ex);
 
-        $scope = $this->createStub(Scope::class);
+        $scope = self::createStub(Scope::class);
         $scope->method('getFile')
             ->willReturn('blade-compiled');
 

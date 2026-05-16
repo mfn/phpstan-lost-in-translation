@@ -15,11 +15,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation;
 
-final class UsedTranslationRecord implements \JsonSerializable
+use DomainException;
+use JsonSerializable;
+
+final class UsedTranslationRecord implements JsonSerializable
 {
     /**
      * @param non-empty-string $file
@@ -50,21 +52,21 @@ final class UsedTranslationRecord implements \JsonSerializable
     {
         $buffer = $json[self::class] ?? null;
 
-        if (!is_string($buffer)) {
-            throw new \DomainException();
+        if (!\is_string($buffer)) {
+            throw new DomainException;
         }
 
         // Keys with binary data fail to serialize when transferred from the phpstan worker
         $decoded = base64_decode($buffer, true);
 
         if (false === $decoded) {
-            throw new \DomainException();
+            throw new DomainException;
         }
 
         $call = unserialize($decoded);
 
         if (!($call instanceof self)) {
-            throw new \DomainException();
+            throw new DomainException;
         }
 
         return $call;

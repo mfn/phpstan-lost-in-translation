@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests;
 
 use Illuminate\Container\Container;
@@ -28,31 +27,32 @@ final class UtilsTest extends TestCase
 {
     public function testEscapeInvalidUnicodeFallback(): void
     {
-        $this->assertSame('"\\xc3("', Utils::e("\xc3\x28"));
+        self::assertSame('"\\xc3("', Utils::e("\xc3\x28"));
     }
 
     public function testFormatTipForKeyValue(): void
     {
-        $this->assertStringContainsString('Key: ', Utils::formatTipForKeyValue('locale', 'key'));
-        $this->assertStringContainsString('Key: ', Utils::formatTipForKeyValue('locale', 'key', 'value'));
-        $this->assertStringContainsString('Value: ', Utils::formatTipForKeyValue('locale', 'key', 'value'));
+        self::assertStringContainsString('Key: ', Utils::formatTipForKeyValue('locale', 'key'));
+        self::assertStringContainsString('Key: ', Utils::formatTipForKeyValue('locale', 'key', 'value'));
+        self::assertStringContainsString('Value: ', Utils::formatTipForKeyValue('locale', 'key', 'value'));
     }
 
     public function testDetectLangPath(): void
     {
         $app = $this->app;
-        $this->assertNotNull($app);
+        self::assertNotNull($app);
 
-        $this->assertSame($app->langPath(), Utils::detectLangPath());
+        self::assertSame($app->langPath(), Utils::detectLangPath());
 
         $original = $app::getInstance();
+
         try {
             $app::setInstance();
 
-            $this->assertSame('lang', Utils::detectLangPath());
+            self::assertSame('lang', Utils::detectLangPath());
 
-            $app::setInstance(new Container());
-            $this->assertSame('lang', Utils::detectLangPath());
+            $app::setInstance(new Container);
+            self::assertSame('lang', Utils::detectLangPath());
         } finally {
             $app::setInstance($original);
         }
@@ -60,18 +60,18 @@ final class UtilsTest extends TestCase
 
     public function testDetectLangPathWithNoApplicationClass(): void
     {
-        $this->assertSame('lang', Utils::detectLangPath(null));
+        self::assertSame('lang', Utils::detectLangPath(null));
     }
 
     public function testDetectLangPathWithUnbootedApplication(): void
     {
-        $app = $this->createStub(\Illuminate\Contracts\Foundation\Application::class);
+        $app = self::createStub(\Illuminate\Contracts\Foundation\Application::class);
         $original = Application::getInstance();
 
         try {
             Application::setInstance($app);
 
-            $this->assertSame('lang', Utils::detectLangPath());
+            self::assertSame('lang', Utils::detectLangPath());
         } finally {
             Application::setInstance($original);
         }
@@ -79,18 +79,18 @@ final class UtilsTest extends TestCase
 
     public function testDetectBaseLocaleWithNoApplication(): void
     {
-        $this->assertSame('en', Utils::detectBaseLocale(null));
+        self::assertSame('en', Utils::detectBaseLocale(null));
     }
 
     public function testDetectBaseLocaleWithUnbootedApplication(): void
     {
-        $app = $this->createStub(\Illuminate\Contracts\Foundation\Application::class);
+        $app = self::createStub(\Illuminate\Contracts\Foundation\Application::class);
         $original = Application::getInstance();
 
         try {
             Application::setInstance($app);
 
-            $this->assertSame('en', Utils::detectBaseLocale());
+            self::assertSame('en', Utils::detectBaseLocale());
         } finally {
             Application::setInstance($original);
         }

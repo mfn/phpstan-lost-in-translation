@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\Tests;
 
 use Illuminate\Foundation\Bootstrap\HandleExceptions;
@@ -42,7 +41,7 @@ class LarastanTest extends RuleTestCase
         );
     }
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -54,7 +53,7 @@ class LarastanTest extends RuleTestCase
     /**
      * @see https://github.com/laravel/framework/issues/49502#issuecomment-2222592953
      */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 

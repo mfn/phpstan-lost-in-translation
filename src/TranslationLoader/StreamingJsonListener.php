@@ -15,8 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation\TranslationLoader;
 
 use JsonStreamingParser\Listener\ListenerInterface;
@@ -79,31 +78,33 @@ class StreamingJsonListener implements ListenerInterface, PositionAwareInterface
 
     public function key(string $key): void
     {
-        if (count($this->stack) !== 2) {
+        if (2 !== \count($this->stack)) {
             // only allow one deep
             return;
         }
 
-        switch ($this->stack[count($this->stack) - 1][0]) {
+        switch ($this->stack[\count($this->stack) - 1][0]) {
             case self::OBJECT:
-                if (strlen($key) > 0) {
+                if (\strlen($key) > 0) {
                     $this->locations[$key] = $this->lineNumber;
                 }
+
                 break;
         }
     }
 
     public function value($value): void
     {
-        if (count($this->stack) !== 2) {
+        if (2 !== \count($this->stack)) {
             // only allow one deep
             return;
         }
 
-        switch ($this->stack[count($this->stack) - 1][0]) {
+        switch ($this->stack[\count($this->stack) - 1][0]) {
             case self::ARRAY:
                 $index = ++$this->lastArrayIndex;
                 $this->locations["int\0" . $index] = $this->lineNumber;
+
                 break;
         }
     }

@@ -15,16 +15,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
-
+declare(strict_types = 1);
 namespace Mfn\PHPStanLostInTranslation;
 
+use DomainException;
+use JsonSerializable;
 use PHPStan\Type\Type;
 
 /**
  * @phpstan-import-type PossibleTranslationRecordCollection from LostInTranslationHelper
  */
-final class TranslationCall implements \JsonSerializable
+final class TranslationCall implements JsonSerializable
 {
     /**
      * @phpstan-param PossibleTranslationRecordCollection $possibleTranslations
@@ -61,14 +62,14 @@ final class TranslationCall implements \JsonSerializable
     {
         $buffer = $json[self::class] ?? null;
 
-        if (!is_string($buffer)) {
-            throw new \DomainException();
+        if (!\is_string($buffer)) {
+            throw new DomainException;
         }
 
         $call = unserialize($buffer);
 
         if (!($call instanceof self)) {
-            throw new \DomainException();
+            throw new DomainException;
         }
 
         return $call;
