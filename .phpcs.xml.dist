@@ -3,7 +3,6 @@
     <file>src</file>
     <file>tests</file>
 
-    <exclude-pattern>*/.direnv/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
 
     <arg name="basepath" value="."/>

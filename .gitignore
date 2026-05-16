@@ -1,10 +1,7 @@
-.direnv
-.envrc
 .idea
 .phpunit.result.cache
 *.log
 clover.xml
 result*
-/.pre-commit-config.yaml
 /coverage/
 /vendor/

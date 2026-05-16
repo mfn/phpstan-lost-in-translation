@@ -1,7 +1,6 @@
 * text=auto
 
 composer.lock linguist-generated
-flake.lock linguist-generated
 
 .editorconfig export-ignore
 .gitattributes export-ignore
@@ -10,8 +9,6 @@ flake.lock linguist-generated
 .phpcs.xml.dist export-ignore
 composer.lock export-ignore
 e2e/ export-ignore
-flake.lock export-ignore
-flake.nix export-ignore
 phpbench.json export-ignore
 phpstan-strict-rules.php export-ignore
 phpstan.neon.dist export-ignore
