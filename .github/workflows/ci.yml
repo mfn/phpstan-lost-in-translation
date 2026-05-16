@@ -14,16 +14,8 @@ permissions:
     contents: read
 
 jobs:
-    lint:
+    phpstan:
         runs-on: ubuntu-latest
-        name: "Lint | PHP ${{ matrix.php-version }}"
-        strategy:
-            fail-fast: false
-            matrix:
-                php-version:
-                    - "8.2"
-                    - "8.3"
-                    - "8.4"
         steps:
             - uses: actions/checkout@v4
 
@@ -31,7 +23,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   coverage: "none"
-                  php-version: "${{ matrix.php-version }}"
+                  php-version: "8.5"
                   tools: composer:v2
 
             - name: Validate composer.json
@@ -42,9 +34,9 @@ jobs:
               uses: actions/cache@v4
               with:
                   path: vendor
-                  key: ${{ runner.os }}-php${{ matrix.php-version }}-${{ hashFiles('composer.json') }}
+                  key: ${{ runner.os }}-php8.5-${{ hashFiles('composer.json') }}
                   restore-keys: |
-                      ${{ runner.os }}-php${{ matrix.php-version }}-
+                      ${{ runner.os }}-php8.5-
 
             - name: Install dependencies
               run: composer update --prefer-dist --no-progress --no-interaction
@@ -54,7 +46,6 @@ jobs:
 
     code-style:
         runs-on: ubuntu-latest
-        name: "Code style"
         steps:
             - uses: actions/checkout@v4
 
@@ -62,7 +53,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   coverage: "none"
-                  php-version: "8.4"
+                  php-version: "8.2"
                   tools: composer:v2
 
             - name: Cache cs-fixer
@@ -128,11 +119,6 @@ jobs:
 
     coverage:
         runs-on: ubuntu-latest
-        name: "Coverage | PHP ${{ matrix.php-version }}"
-        strategy:
-            matrix:
-                php-version:
-                    - "8.3"
         steps:
             - uses: actions/checkout@v4
 
@@ -140,7 +126,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   coverage: pcov
-                  php-version: "${{ matrix.php-version }}"
+                  php-version: "8.5"
                   tools: composer:v2
 
             - name: Cache Composer packages
@@ -148,9 +134,9 @@ jobs:
               uses: actions/cache@v4
               with:
                   path: vendor
-                  key: ${{ runner.os }}-php${{ matrix.php-version }}-${{ hashFiles('composer.json') }}
+                  key: ${{ runner.os }}-php8.5-${{ hashFiles('composer.json') }}
                   restore-keys: |
-                      ${{ runner.os }}-php${{ matrix.php-version }}-
+                      ${{ runner.os }}-php8.5-
 
             - name: Install dependencies
               run: composer update --prefer-dist --no-progress --no-interaction
