@@ -132,12 +132,12 @@ class LostInTranslationHelper
 
             $args = $node->args;
         } elseif ($node instanceof Node\Expr\FuncCall) {
-            if (!$node->name instanceof Node\Name\FullyQualified) {
+            if (!$node->name instanceof Node\Name) {
                 return null;
             }
 
             $className = null;
-            $name = $node->name->toLowerString();
+            $name = $scope->resolveName($node->name);
 
             if ('__' === $name || 'trans' === $name) {
                 $isChoice = false;
