@@ -5,6 +5,9 @@ upstream history before the fork point is not tracked here.
 
 ## [Unreleased]
 
+
+## [0.1.0] - 2026-05-16
+
 ### Added
 - `webmozart/assert` to `require-dev` so bladestan 0.6.0's undeclared transitive use of
   `Webmozart\Assert\Assert` works on Laravel 10.
