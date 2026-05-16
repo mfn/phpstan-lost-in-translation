@@ -3,7 +3,7 @@
 
 > Note: this is a fork of https://github.com/jbboehr/phpstan-lost-in-translation
 
-[![ci](https://github.com/mfn/phpstan-lost-in-translation/actions/workflows/ci.yml/badge.svg)](https://github.com/mfn/phpstan-lost-in-translation/actions/workflows/ci.yml)
+[![ci](https://github.com/mfn/phpstan-lost-in-translation/actions/workflows/ci.yaml/badge.svg)](https://github.com/mfn/phpstan-lost-in-translation/actions/workflows/ci.yaml)
 [![License: AGPL v3+](https://img.shields.io/badge/License-AGPL_v3%2b-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 ![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)
 
