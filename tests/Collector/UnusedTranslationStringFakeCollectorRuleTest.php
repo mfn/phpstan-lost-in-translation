@@ -37,11 +37,11 @@ final class UnusedTranslationStringFakeCollectorRuleTest extends \PHPUnit\Framew
         $ex = new \RuntimeException(self::class);
         $node = $this->createStub(FuncCall::class);
 
-        $helper = $this->createMock(LostInTranslationHelper::class);
+        $helper = $this->createStub(LostInTranslationHelper::class);
         $helper->method('parseCallLike')
             ->willThrowException($ex);
 
-        $scope = $this->createMock(Scope::class);
+        $scope = $this->createStub(Scope::class);
         $scope->method('getFile')
             ->willReturn('blade-compiled');
 
@@ -55,6 +55,7 @@ final class UnusedTranslationStringFakeCollectorRuleTest extends \PHPUnit\Framew
 
         $obj->processNode(
             $node,
+            // @phpstan-ignore-next-line argument.type
             $scope,
         );
     }

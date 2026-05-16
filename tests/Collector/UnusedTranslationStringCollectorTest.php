@@ -36,7 +36,7 @@ final class UnusedTranslationStringCollectorTest extends \PHPUnit\Framework\Test
         $ex = new \RuntimeException(self::class);
         $node = $this->createStub(FuncCall::class);
 
-        $helper = $this->createMock(LostInTranslationHelper::class);
+        $helper = $this->createStub(LostInTranslationHelper::class);
         $helper->method('parseCallLike')
             ->willThrowException($ex);
 

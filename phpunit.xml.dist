@@ -4,17 +4,13 @@
         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
         beStrictAboutOutputDuringTests="true"
         beStrictAboutChangesToGlobalState="true"
-        beStrictAboutTodoAnnotatedTests="true"
         bootstrap="tests/bootstrap.php"
+        cacheDirectory=".phpunit.cache"
         colors="true"
         failOnRisky="true"
         failOnWarning="true"
-        verbose="true"
 >
     <coverage includeUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">./src</directory>
-        </include>
         <report>
             <clover outputFile="clover.xml"/>
             <text
@@ -30,4 +26,10 @@
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
+
+    <source>
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+    </source>
 </phpunit>

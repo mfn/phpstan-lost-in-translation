@@ -46,8 +46,14 @@ final class JsonErrorFormatterTest extends ErrorFormatterTestCase
 
         $this->assertIsArray($actual);
         $this->assertArrayHasKey(MissingTranslationStringRule::IDENTIFIER, $actual);
-        $this->assertArrayHasKey('ja', $actual[MissingTranslationStringRule::IDENTIFIER]);
-        $this->assertArrayHasKey('missing translation string', $actual[MissingTranslationStringRule::IDENTIFIER]['ja']);
+
+        $byIdentifier = $actual[MissingTranslationStringRule::IDENTIFIER];
+        $this->assertIsArray($byIdentifier);
+        $this->assertArrayHasKey('ja', $byIdentifier);
+
+        $byLocale = $byIdentifier['ja'];
+        $this->assertIsArray($byLocale);
+        $this->assertArrayHasKey('missing translation string', $byLocale);
     }
 
     public function testExceptionConversion(): void
@@ -72,15 +78,15 @@ final class JsonErrorFormatterTest extends ErrorFormatterTestCase
     private static function makeAnalysisResult(): AnalysisResult
     {
         // phpcs:disable
-        return (static function () {
-            $class = new \ReflectionClass(\PHPStan\Command\AnalysisResult::class);
-            $object = $class->newInstanceWithoutConstructor();
+        $class = new \ReflectionClass(\PHPStan\Command\AnalysisResult::class);
+        /** @var \PHPStan\Command\AnalysisResult $object */
+        $object = $class->newInstanceWithoutConstructor();
 
-            (function () {
-                $this->notFileSpecificErrors = [];
-                $this->internalErrors = [];
-                $this->warnings = [];
-                $this->collectedData = [
+        $values = [
+            'notFileSpecificErrors' => [],
+            'internalErrors' => [],
+            'warnings' => [],
+            'collectedData' => [
                     \PHPStan\Collectors\CollectedData::__set_state([
                         'data' => [
                             [
@@ -179,16 +185,16 @@ final class JsonErrorFormatterTest extends ErrorFormatterTestCase
                         'filePath' => __DIR__ . '/../../e2e/src/invalid-locale.php',
                         'collectorType' => 'Mfn\\PHPStanLostInTranslation\\UnusedTranslationStringCollector',
                     ]),
-                ];
-                $this->defaultLevelUsed = false;
-                $this->projectConfigFile = __DIR__ . '/../../e2e/phpstan-e2e.neon';
-                $this->savedResultCache = true;
-                $this->peakMemoryUsageBytes = 67633152;
-                $this->isResultCacheUsed = true;
-                $this->changedProjectExtensionFilesOutsideOfAnalysedPaths = [
+                ],
+                'defaultLevelUsed' => false,
+                'projectConfigFile' => __DIR__ . '/../../e2e/phpstan-e2e.neon',
+                'savedResultCache' => true,
+                'peakMemoryUsageBytes' => 67633152,
+                'isResultCacheUsed' => true,
+                'changedProjectExtensionFilesOutsideOfAnalysedPaths' => [
                     __DIR__ . '/../../src/ErrorFormatter/JsonErrorFormatter.php' => 'Mfn\\PHPStanLostInTranslation\\ErrorFormatter\\JsonErrorFormatter',
-                ];
-                $this->fileSpecificErrors = [
+                ],
+                'fileSpecificErrors' => [
                     \PHPStan\Analyser\Error::__set_state([
                         'message' => 'Unknown locale: fake',
                         'file' => __DIR__ . '/../../e2e/lang/fake.json',
@@ -617,11 +623,14 @@ final class JsonErrorFormatterTest extends ErrorFormatterTestCase
                             ],
                         ],
                     ]),
-                ];
-            })->bindTo($object, \PHPStan\Command\AnalysisResult::class)();
+                ],
+        ];
 
-            return $object;
-        })();
+        foreach ($values as $name => $value) {
+            $class->getProperty($name)->setValue($object, $value);
+        }
+
+        return $object;
         // phpcs:enable
     }
 }

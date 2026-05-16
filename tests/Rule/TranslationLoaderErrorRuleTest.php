@@ -17,7 +17,7 @@
  */
 declare(strict_types=1);
 
-namespace Rule;
+namespace Mfn\PHPStanLostInTranslation\Tests\Rule;
 
 use Illuminate\Foundation\Bootstrap\HandleExceptions;
 use Mfn\PHPStanLostInTranslation\Rule\TranslationLoaderErrorRule;
@@ -45,13 +45,11 @@ class TranslationLoaderErrorRuleTest extends RuleTestCase
 
     public function tearDown(): void
     {
-        unset($this->translationLoader);
+        $this->translationLoader = null;
 
         parent::tearDown();
 
-        if (class_exists(HandleExceptions::class, false) && method_exists(HandleExceptions::class, 'flushState')) {
-            HandleExceptions::flushState();
-        }
+        HandleExceptions::flushState($this);
     }
 
     protected function getRule(): Rule
@@ -135,7 +133,7 @@ class TranslationLoaderErrorRuleTest extends RuleTestCase
         /** @phpstan-ignore-next-line phpstanApi.constructor */
         $node = new CollectedDataNode([], false);
 
-        $loader = $this->createMock(TranslationLoader::class);
+        $loader = $this->createStub(TranslationLoader::class);
         $loader->method('getErrors')
             ->willThrowException($ex);
 
@@ -146,6 +144,7 @@ class TranslationLoaderErrorRuleTest extends RuleTestCase
 
         $obj->processNode(
             $node,
+            // @phpstan-ignore-next-line argument.type
             $this->createStub(Scope::class),
         );
     }

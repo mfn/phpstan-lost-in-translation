@@ -43,7 +43,7 @@ final class ShouldNotHappenExceptionTest extends \PHPUnit\Framework\TestCase
         }
 
         $ex = new \RuntimeException(self::class);
-        $mock = $this->createMock(LostInTranslationHelper::class);
+        $mock = $this->createStub(LostInTranslationHelper::class);
         $mock->method('parseCallLike')
             ->willThrowException($ex);
 
@@ -56,6 +56,7 @@ final class ShouldNotHappenExceptionTest extends \PHPUnit\Framework\TestCase
 
         $obj->processNode(
             $node,
+            // @phpstan-ignore-next-line argument.type
             $this->createStub(Scope::class),
         );
     }

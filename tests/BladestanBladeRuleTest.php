@@ -35,10 +35,6 @@ class BladestanBladeRuleTest extends RuleTestCase
             self::markTestSkipped('This test requires Bladestan');
         }
 
-        if (version_compare(\Composer\InstalledVersions::getVersion('tomasvotruba/bladestan'), '0.7', '<')) {
-            self::markTestSkipped('This test requires Bladestan >=0.7');
-        }
-
         parent::setUp();
     }
 
@@ -49,9 +45,7 @@ class BladestanBladeRuleTest extends RuleTestCase
     {
         parent::tearDown();
 
-        if (class_exists(HandleExceptions::class, false) && method_exists(HandleExceptions::class, 'flushState')) {
-            HandleExceptions::flushState();
-        }
+        HandleExceptions::flushState($this);
     }
 
     protected function getRule(): Rule

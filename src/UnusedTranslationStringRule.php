@@ -77,7 +77,7 @@ final class UnusedTranslationStringRule implements Rule
                     ->file($item['file'])
                     ->line($item['line']);
 
-                if (!empty($item['candidate'])) {
+                if (null !== $item['candidate'] && '' !== $item['candidate']) {
                     $builder->addTip(sprintf('Did you mean %s?', Utils::e($item['candidate'])));
                 }
 

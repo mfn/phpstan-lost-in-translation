@@ -28,7 +28,7 @@ class CallRuleCollectionTest extends TestCase
 {
     public function testMissingParameterDoesNotThrow(): void
     {
-        $mock = $this->createMock(Container::class);
+        $mock = $this->createStub(Container::class);
         $mock->method('getParameter')
             /** @phpstan-ignore-next-line phpstanApi.constructor */
             ->willThrowException(new ParameterNotFoundException('lostInTranslation'));
@@ -39,7 +39,7 @@ class CallRuleCollectionTest extends TestCase
 
     public function testNonArrayParameterDoesNotThrow(): void
     {
-        $mock = $this->createMock(Container::class);
+        $mock = $this->createStub(Container::class);
         $mock->method('getParameter')
             ->willReturn('foo');
 

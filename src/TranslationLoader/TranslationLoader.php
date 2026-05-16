@@ -290,7 +290,7 @@ class TranslationLoader
 
         foreach ($files as $file) {
             if (
-                false === preg_match(
+                1 !== preg_match(
                     '~^([\w-]{2,})(?:\.json|/([^/]+)\.php)$~',
                     $file->getRelativePathname(),
                     $matches,
@@ -406,8 +406,6 @@ class TranslationLoader
         }
 
         $item = implode('.', array_slice($segments, 1));
-
-        assert(strlen($item) > 0);
 
         return [null, $group, $item];
     }

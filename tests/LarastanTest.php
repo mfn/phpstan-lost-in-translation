@@ -58,9 +58,7 @@ class LarastanTest extends RuleTestCase
     {
         parent::tearDown();
 
-        if (class_exists(HandleExceptions::class, false) && method_exists(HandleExceptions::class, 'flushState')) {
-            HandleExceptions::flushState();
-        }
+        HandleExceptions::flushState($this);
     }
 
     public function testLarastanInference(): void
